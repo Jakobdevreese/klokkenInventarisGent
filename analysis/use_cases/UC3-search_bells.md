@@ -1,4 +1,4 @@
-# Use Case 3 - Serach for Bells
+# Use Case 3 - Search for Bells
 
 ## Actors
 
@@ -47,3 +47,4 @@ User can search bells by:
 - Manufacturer
 - Weight
 - Pitch
+- Function
