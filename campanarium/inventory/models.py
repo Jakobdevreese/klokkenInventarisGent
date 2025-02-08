@@ -47,7 +47,6 @@ class Bell(models.Model):
     class Meta:
         verbose_name = 'Klok'
         verbose_name_plural = 'Klokken'
-        ordening = ['year', 'name']
     
     def __str__(self):
         return f"{self.name} ({self.year}) - {self.manufacturer.name} - {self.location.name}"
@@ -66,7 +65,7 @@ class Manufacturer(models.Model):
     class Meta:
         verbose_name = 'Gieter'
         verbose_name_plural = 'Gieters'
-        ordening = ['name']
+        ordering = ['name']
     
     def __str__(self):
         return f"{self.name} - {self.country}"
@@ -92,7 +91,7 @@ class Tower(models.Model):
     class Meta:
         verbose_name = 'Toren'
         verbose_name_plural = 'Torens'
-        ordening = ['name']
+        ordering = ['name']
     
     def __str__(self):
         return f"{self.name} - {self.church}"
@@ -125,7 +124,7 @@ class Carillon(models.Model):
     class Meta:
         verbose_name = 'Beiaard'
         verbose_name_plural = 'Beiaarden'
-        ordening = ['weight', 'name']
+        ordering = ['name']
     
     def __str__(self):
         return f"{self.name} - {self.established} - {self.tower.name}"
@@ -176,7 +175,7 @@ class File(models.Model):
     class Meta:
         verbose_name = 'Bestand'
         verbose_name_plural = 'Bestanden'
-        ordening = ['name', 'file_type']
+        ordering = ['name', 'file_type']
     
     def __str__(self):
         return f"{self.file_type} - {self.bell.name} - {self.carillon.name} - {self.manufacturer.name} - {self.tower.name}"

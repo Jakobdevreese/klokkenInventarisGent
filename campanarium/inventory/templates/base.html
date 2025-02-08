@@ -1,0 +1,57 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Inventaris Beiaarden en Klokken Gent</title>
+  <link rel="stylesheet"
+        href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <!-- Link to your custom CSS if needed -->
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="{% url 'home' %}">
+      <img src="{% static 'images/logo.jpg' %}" width="30" height="30" alt="Logo">
+      Inventaris Beiaarden en Klokken Gent
+    </a>
+    <button class="navbar-toggler" type="button" 
+            data-toggle="collapse" data-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" 
+            aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'bells' %}">Klokken</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'carillons' %}">Beiaarden</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'manufacturers' %}">Gieters</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'towers' %}">Torens</a>
+        </li>
+      </ul>
+      <!-- Search form -->
+      <form class="form-inline my-2 my-lg-0" method="GET" action="{% url 'search' %}">
+        <input class="form-control mr-sm-2" type="search" placeholder="Zoeken" name="q" aria-label="Zoeken">
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Zoeken</button>
+      </form>
+    </div>
+  </nav>
+  
+  <!-- Main content -->
+  <div class="container mt-4">
+    {% block content %}
+    {% endblock %}
+  </div>
+  
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
