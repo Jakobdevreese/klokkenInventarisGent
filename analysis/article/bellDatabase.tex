@@ -1,0 +1,309 @@
+% ============================================================= %
+%  --- Bell Database Article ---
+% ============================================================= %
+
+\documentclass[11pt, a4paper]{article}
+
+% ------------------------------------------------------------- 
+% Packages
+% -------------------------------------------------------------
+\usepackage{microtype} % Better typography
+\usepackage{fontspec} % For loading fonts
+\usepackage{fontawesome5} % For icons
+\usepackage{parskip} % No paragraph indentation
+\usepackage{ragged2e} % For better justification control
+\usepackage{hyphenat} % For hyphenation control
+\usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm]{geometry} % Page margins
+\usepackage{pgfplots} % For plots
+\usepackage{pgf-pie} % For pie charts
+\usepackage{amsmath} % For math
+\usepackage{caption} % For captions
+
+
+% -------------------------------------------------------------
+% Font
+% -------------------------------------------------------------
+\usepackage{fontspec}
+\setmainfont{Fira Code}
+
+
+% -------------------------------------------------------------
+% Styles
+% -------------------------------------------------------------
+\renewcommand{\abstractname}{} % Remove abstract title
+\newlength{\abstractwidth}
+\setlength{\abstractwidth}{0.8\textwidth}
+
+% -------------------------------------------------------------
+% Codeblocks
+% -------------------------------------------------------------
+\usepackage{listings} % For codeblocks
+\usepackage{xcolor} % For colors
+\definecolor{lgray}{gray}{0.9} % Light gray color
+
+\lstdefinelanguage{CSS}{
+  keywords={
+    color, background, font, margin, padding, border, display, position,
+    width, height, top, left, right, bottom, float, clear, overflow,
+    text-align, vertical-align, line-height, letter-spacing, word-spacing,
+    text-decoration, text-transform, font-family, font-size, font-weight,
+    font-style, list-style, list-style-type, list-style-position,
+    table-layout, border-collapse, border-spacing, caption-side, empty-cells,
+    content, cursor, outline, visibility, z-index, zoom, filter, opacity,
+    transition, animation, transform, box-shadow, text-shadow, border-radius,
+    background-image, background-repeat, background-position, background-size,
+    @media, @keyframes, !important
+  },
+  keywordstyle=\color{magenta},
+  comment=[l]{//},
+  morecomment=[s]{/*}{*/},
+  commentstyle=\color{green},
+  stringstyle=\color{purple},
+  sensitive=true,
+  morestring=[b]",
+  morestring=[b]',
+}
+
+\lstdefinestyle{Pythonstyle}{
+    language=Python,
+    backgroundcolor=\color{lgray},
+    commentstyle=\color{green},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{gray},
+    stringstyle=\color{purple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,
+    breaklines=true,
+    captionpos=b,
+    keepspaces=true,
+    numbers=left,
+    numbersep=5pt,
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=2
+}
+
+\lstdefinestyle{CSSstyle}{
+    language=CSS,
+    backgroundcolor=\color{lgray},
+    commentstyle=\color{green},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{gray},
+    stringstyle=\color{purple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,
+    breaklines=true,
+    captionpos=b,
+    keepspaces=true,
+    numbers=left,
+    numbersep=5pt,
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=2
+}
+
+\lstdefinestyle{HTMLstyle}{
+    language=HTML,
+    backgroundcolor=\color{lgray},
+    commentstyle=\color{green},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{gray},
+    stringstyle=\color{purple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,
+    breaklines=true,
+    captionpos=b,
+    keepspaces=true,
+    numbers=left,
+    numbersep=5pt,
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=2
+}
+
+
+% ============================================================== %
+%  --- Document Information ---
+% ============================================================== %
+
+\title{\Huge Structuring Bell Heritage: A Comprehensive Database Schema and Framework for Carillons and Bells}
+\author{\LARGE{Jakob De Vreese} \\ \texttt{\small{jakobdevreese@gmail.com}}}
+\date{March 2025}
+
+% ============================================================== %
+%  --- Document ---
+% ============================================================== %
+
+\begin{document}
+
+% -------------------------------------------------------------
+% Title Page
+% -------------------------------------------------------------
+\begin{titlepage}
+    \newgeometry{top=6cm}
+    \maketitle
+    \thispagestyle{empty}
+    \vspace{1cm}
+    \begin{center}
+        \small{last updated: \today}
+    \end{center}
+    \vspace{2cm}
+    
+    \begin{center}
+        \rule{\textwidth}{0.4pt}
+        \vspace{1em}
+        
+        \begin{minipage}{\abstractwidth}
+            \setlength{\rightskip}{0pt plus 1fil} % Allow extra stretch on each line
+            \justifying
+            \noindent
+            This research addresses a significant challenge in campanology: while enthusiasts and professionals 
+            gather extensive data on bells and carillons, this valuable information often remains fragmented, 
+            inconsistently structured, and inaccessible to the wider community. We propose the development of a 
+            standardized framework for campanological data management — a comprehensive database schema designed 
+            to accommodate the documentation needs for bells, carillons, and related heritage objects. This framework 
+            aims to establish a foundation that balances standardization with flexibility, enabling individual 
+            researchers and institutions to maintain autonomous databases while adhering to compatible structural 
+            principles. The project consists of two key deliverables: first, a detailed entity-relationship model 
+            that defines core data elements and their relationships; and second, an open-source Django web application 
+            that implements this schema, providing accessible interfaces for data entry, management, and retrieval. 
+            By establishing this standardized yet adaptable framework, we facilitate the potential integration of 
+            distributed campanological datasets, thereby enhancing opportunities for comprehensive analysis, heritage 
+            preservation, and collaborative research across both professional and amateur campanological communities.
+          \end{minipage}
+        
+        \vspace{1em}
+        \rule{\textwidth}{0.4pt}
+    \end{center}
+
+    \restoregeometry
+\end{titlepage}
+
+% -------------------------------------------------------------
+% Table of Contents
+% -------------------------------------------------------------
+
+\clearpage
+\setcounter{page}{1}
+\pagenumbering{arabic}
+\tableofcontents
+\clearpage
+
+% -------------------------------------------------------------
+% Begin of the document
+% -------------------------------------------------------------
+
+\section{Introduction}
+
+In the field of campanology, a wealth of valuable data is continuously gathered 
+by both professional researchers and dedicated enthusiasts. This information 
+encompasses a diverse range of attributes: physical dimensions of bells, acoustic 
+properties, historical provenance, inscriptions, decorative elements, mechanical 
+configurations, and the compositional arrangements of bell sets within carillons 
+and towers. Despite this rich accumulation of knowledge, the campanological field 
+faces a significant challenge: the lack of standardized methods for structuring, 
+storing, and sharing this information in a consistent and accessible manner.
+
+The current landscape of campanological data management is characterized by fragmentation 
+and inconsistency. Individual researchers, institutions, and bell enthusiasts typically 
+develop their own documentation methods, resulting in a patchwork of incompatible datasets. 
+These range from handwritten notes and spreadsheets to custom-built databases with idiosyncratic 
+schemas. While these approaches may serve immediate project needs, they create substantial 
+barriers to knowledge sharing, comparative analysis, and comprehensive research across the broader field.
+
+This fragmentation presents several critical limitations:
+
+\begin{itemize}
+    \item \textbf{Restricted Accessibility:} \\
+        Valuable research remains siloed within individual projects or institutions, limiting potential insights from combined datasets.
+    \item \textbf{Duplication of Effort:} \\
+        Researchers frequently redocument the same bells due to lack of awareness or access to existing documentation.
+    \item \textbf{Inconsistent Terminology:} \\
+        The absence of standardized vocabulary and measurement protocols creates difficulties in comparing data between sources.
+    \item \textbf{Limited Analytical Capacity:} \\
+        The inability to easily aggregate distributed datasets hinders comprehensive statistical analysis and pattern recognition across larger samples.
+\end{itemize}
+
+This paper presents a solution to these challenges through the development of a comprehensive database schema and 
+framework specifically designed for campanological research. Our approach balances the need for standardization 
+with the flexibility required to accommodate the diverse documentation needs across the field. We propose both a 
+conceptual data model — represented as an entity-relationship diagram — and its practical implementation as an 
+open-source web application built using the Django framework.
+
+The primary objectives of this project are to:
+\begin{enumerate}
+    \item Design and propose a flexibel, comprehensive and adaptable database schema for campanological data management.
+    \item Develop an open-source, easy to use, web application that implements this schema.
+    \item Facilitate the integration of distributed campanological datasets, enabling comprehensive analysis and collaborative research.
+\end{enumerate}
+
+\subsection{Itemize}
+
+\begin{itemize}
+    \item \textbf{Item 1:} \\
+        Some information about item 1.
+    \item \textbf{Item 2:} \\
+        Some information about item 2.
+    \item \textbf{Code: } \\
+        This template has styles for \textbf{Python}, \textbf{CSS}, and \textbf{HTML}.
+\end{itemize}
+    
+\section{Database Schema}
+
+When designing a database schema for campanological data, we must consider the diverse range of attributes.
+We start with the smallest unit we want to document: the bell. A bell has a set of physical properties, such absence
+diamieter, height, weight and inscriptions, but also has a set of relationships with other entities, like bell founder. 
+A bell hangs most of the time in a tower, wich gives away the geographical location, and can be part of a larger entity, the carillon. 
+When we take this into account, we can start designing the database schema.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/basic_entities.png}
+    \caption{Basic entities in the campanological database schema.}
+    \label{fig:basic-entities}
+\end{figure}
+
+When we look at the basic entities in the campanological database schema, we see that the bell is the central entity.
+When we put this central in our database, and we add the relationships between the entities, we get a readable and 
+connectible database. To lay the basis for a standardization in this field, we off course need more. We want a minimum
+of fields that every database in our field should have, and a standardized way of taking basic field measurements.
+
+\subsection{Bell}
+
+The bell is our starting point. The minimal attributes needed to describe a bell, in a way that it can't be confused with another bell, are:
+
+\begin{itemize}
+    \item \textbf{Founder:} \\
+        The founder of a bell, this can be a person or a company. (Other enitie)
+    \item \textbf{Weight:} \\
+        The weight of the bell (in kilograms)
+    \item \textbf{Pitch:} \\
+        The pitch of the bell (in Hertz)
+    \item \textbf{Diameter:} \\
+        The diameter of the bell (in centimeters) - TODO - add more
+    \item \textbf{Height:} \\
+        The height of the bell (in centimeters) - TODO - add more
+    \item \textbf{Inscriptions:} \\
+        The inscriptions on the bell in words
+    \item \textbf{Year:} \\
+        The year the bell was cast.
+    \item \textbf{Location:} \\
+        The location of the bell. (Other entity) - TODO - add more
+
+Other attributes can be added to the bell entity, but these are the minimal attributes needed to describe a bell. The researchers should strive 
+to document these attributes as complete as possible for all bells.
+
+\subsection{Founder}
+
+A founder is a person or a company that casted the bell. This is a tricky entity, because a founder can be a person or a company, and can have multiple
+ways to write the name, or there are founders that worked with other companies. How we propose to solve this in the standardization is to have the attributes
+in the database for both the name of the founder, as well as the company, and the years the company or the founder was active. This way, when we have a founder 
+that worked with multiple companies, or companies that had muliple founders that where named by name on the bell, we can document this, but they will come up 
+when we search for the founder.
+
+    
+
+\end{document}
