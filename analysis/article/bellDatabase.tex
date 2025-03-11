@@ -18,6 +18,7 @@
 \usepackage{pgf-pie} % For pie charts
 \usepackage{amsmath} % For math
 \usepackage{caption} % For captions
+\usepackage{hyperref} % For hyperlinks
 
 
 % -------------------------------------------------------------
@@ -143,7 +144,7 @@
 % Title Page
 % -------------------------------------------------------------
 \begin{titlepage}
-    \newgeometry{top=6cm}
+    \newgeometry{top=4cm}
     \maketitle
     \thispagestyle{empty}
     \vspace{1cm}
@@ -160,19 +161,7 @@
             \setlength{\rightskip}{0pt plus 1fil} % Allow extra stretch on each line
             \justifying
             \noindent
-            This research addresses a significant challenge in campanology: while enthusiasts and professionals 
-            gather extensive data on bells and carillons, this valuable information often remains fragmented, 
-            inconsistently structured, and inaccessible to the wider community. We propose the development of a 
-            standardized framework for campanological data management — a comprehensive database schema designed 
-            to accommodate the documentation needs for bells, carillons, and related heritage objects. This framework 
-            aims to establish a foundation that balances standardization with flexibility, enabling individual 
-            researchers and institutions to maintain autonomous databases while adhering to compatible structural 
-            principles. The project consists of two key deliverables: first, a detailed entity-relationship model 
-            that defines core data elements and their relationships; and second, an open-source Django web application 
-            that implements this schema, providing accessible interfaces for data entry, management, and retrieval. 
-            By establishing this standardized yet adaptable framework, we facilitate the potential integration of 
-            distributed campanological datasets, thereby enhancing opportunities for comprehensive analysis, heritage 
-            preservation, and collaborative research across both professional and amateur campanological communities.
+            This research presents a standardized \textbf{database schema} for campanological documentation, developed initially for the \textit{Ghent Carillon Association} while designed for broader adoption. The work identifies the \textbf{minimal structural requirements} for comprehensively documenting bells and carillons within a standardized framework, facilitating cross-institutional data exchange. An accompanying \textit{open-source Django Web Application} implements this schema, providing organizations with a customizable, self-hostable solution for campanological data management and collaborative research opportunities.
           \end{minipage}
         
         \vspace{1em}
@@ -195,24 +184,21 @@
 % -------------------------------------------------------------
 % Begin of the document
 % -------------------------------------------------------------
+\section{Abstract}
+
+This research addresses a critical challenge in campanology: the fragmentation and inconsistent documentation of bell heritage data across institutions and researchers. We present a standardized database schema that establishes minimal structural requirements for comprehensive bell documentation, developed initially for the \textit{Ghent Carillon Association} but designed for broader adoption within the international campanological community. Our model identifies four essential entities — \textbf{bells, founders, towers, and carillons} — with their core attributes and relationships, creating a framework that balances standardization with flexibility.
+
+The bell entity forms the central component of our schema, documenting physical properties, historical information, and contextual elements. We give special attention to the founder entity, which presents unique modeling challenges due to its historical complexity — accommodating individual craftsmen, family workshops, and commercial enterprises across centuries with varying naming conventions and organizational structures. Similarly, our tower entity captures not only geographical location but contextual information about the installation environment, while the carillon entity enables documentation of bell collections as functional musical instruments.
+
+This database schema enables independent organizations to maintain autonomous databases while ensuring structural compatibility for potential cross-institutional data exchange and aggregation. By identifying minimal required fields while allowing for extension, our approach accommodates both amateur enthusiasts with limited technical resources and professional researchers with more complex documentation needs. An accompanying open-source Django web application implements this schema, providing organizations with a customizable, self-hostable solution for campanological data management with built-in file attachment capabilities for multimedia documentation.
+
+By establishing this foundation, we facilitate the transformation of isolated bell documentation efforts into an interconnected network of compatible datasets, enhancing opportunities for collaborative research and comprehensive analysis across the field of campanology. This standardized framework represents a significant step toward preserving and studying bell heritage through structured, accessible, and interoperable data management.
 
 \section{Introduction}
 
-In the field of campanology, a wealth of valuable data is continuously gathered 
-by both professional researchers and dedicated enthusiasts. This information 
-encompasses a diverse range of attributes: physical dimensions of bells, acoustic 
-properties, historical provenance, inscriptions, decorative elements, mechanical 
-configurations, and the compositional arrangements of bell sets within carillons 
-and towers. Despite this rich accumulation of knowledge, the campanological field 
-faces a significant challenge: the lack of standardized methods for structuring, 
-storing, and sharing this information in a consistent and accessible manner.
+In the field of campanology, a wealth of valuable data is continuously gathered by both professional researchers and dedicated enthusiasts. This information encompasses a diverse range of attributes: physical dimensions of bells, acoustic properties, historical provenance, inscriptions, decorative elements, mechanical configurations, and the compositional arrangements of bell sets within carillons and towers. Despite this rich accumulation of knowledge, the campanological field faces a significant challenge: the lack of standardized methods for structuring, storing, and sharing this information in a consistent and accessible manner.
 
-The current landscape of campanological data management is characterized by fragmentation 
-and inconsistency. Individual researchers, institutions, and bell enthusiasts typically 
-develop their own documentation methods, resulting in a patchwork of incompatible datasets. 
-These range from handwritten notes and spreadsheets to custom-built databases with idiosyncratic 
-schemas. While these approaches may serve immediate project needs, they create substantial 
-barriers to knowledge sharing, comparative analysis, and comprehensive research across the broader field.
+The current landscape of campanological data management is characterized by fragmentation and inconsistency. Individual researchers, institutions, and bell enthusiasts typically develop their own documentation methods, resulting in a patchwork of incompatible datasets. These range from handwritten notes and spreadsheets to custom-built databases with idiosyncratic schemas. While these approaches may serve immediate project needs, they create substantial barriers to knowledge sharing, comparative analysis, and comprehensive research across the broader field.
 
 This fragmentation presents several critical limitations:
 
@@ -227,11 +213,7 @@ This fragmentation presents several critical limitations:
         The inability to easily aggregate distributed datasets hinders comprehensive statistical analysis and pattern recognition across larger samples.
 \end{itemize}
 
-This paper presents a solution to these challenges through the development of a comprehensive database schema and 
-framework specifically designed for campanological research. Our approach balances the need for standardization 
-with the flexibility required to accommodate the diverse documentation needs across the field. We propose both a 
-conceptual data model — represented as an entity-relationship diagram — and its practical implementation as an 
-open-source web application built using the Django framework.
+This paper presents a solution to these challenges through the development of a comprehensive database schema and framework specifically designed for campanological research. Our approach balances the need for standardization with the flexibility required to accommodate the diverse documentation needs across the field. We propose both a conceptual data model — represented as an entity-relationship diagram — and its practical implementation as an open-source web application built using the Django framework.
 
 The primary objectives of this project are to:
 \begin{enumerate}
@@ -240,16 +222,19 @@ The primary objectives of this project are to:
     \item Facilitate the integration of distributed campanological datasets, enabling comprehensive analysis and collaborative research.
 \end{enumerate}
 
-\subsection{Itemize}
+\subsection{Background}
 
-\begin{itemize}
-    \item \textbf{Item 1:} \\
-        Some information about item 1.
-    \item \textbf{Item 2:} \\
-        Some information about item 2.
-    \item \textbf{Code: } \\
-        This template has styles for \textbf{Python}, \textbf{CSS}, and \textbf{HTML}.
-\end{itemize}
+-- TO DO --
+
+\subsection{Case studies}
+
+-- TO DO --
+
+\begin{enumerate}
+    \item \textbf{Dove's Guide} \href{https://dove.cccbr.org.uk/about#:~:text=Dove%E2%80%99s%20Guide%20is%20a%20resource,to%20other%20bells%20of%20interest}{link}
+    \item \textbf{american bells database} \href{https://www.bells.org/}{link}
+\end{enumerate}
+
     
 \section{Database Schema}
 
@@ -292,6 +277,7 @@ The bell is our starting point. The minimal attributes needed to describe a bell
         The year the bell was cast.
     \item \textbf{Location:} \\
         The location of the bell. (Other entity) - TODO - add more
+\end{itemize}
 
 Other attributes can be added to the bell entity, but these are the minimal attributes needed to describe a bell. The researchers should strive 
 to document these attributes as complete as possible for all bells.
@@ -335,10 +321,10 @@ The items in the tower entity are:
 \begin{itemize}
     \item \textbf{Name:} The name of the tower
     \item \textbf{Building:} The building attached to the tower, can be a church or can be empty when the tower in it self has a clear name.
-    \item \textbf{geo_coordinates:} The geographical coordinates of the tower in longitude and latitude.
+    \item \textbf{Geo Coordinates:} The geographical coordinates of the tower in longitude and latitude.
     \item \textbf{Adress:} The adress of the tower.
     \item \textbf{height:} The height of the tower.
-    \item \textbf{height_bell:} The approxamte height of the bell in the tower.
+    \item \textbf{height bell:} The approxamte height of the bell in the tower.
     \item \textbf{remark:} A remark about the tower, can be used to document that the bell is not located in a tower or other remarks.
 \end{itemize}
 

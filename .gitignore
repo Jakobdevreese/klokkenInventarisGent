@@ -170,3 +170,10 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
+
+# Latex components
+*.aux
+*.log
+*.toc
+*.out
+*.pdf
