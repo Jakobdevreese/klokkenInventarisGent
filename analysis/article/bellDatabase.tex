@@ -298,12 +298,81 @@ to document these attributes as complete as possible for all bells.
 
 \subsection{Founder}
 
-A founder is a person or a company that casted the bell. This is a tricky entity, because a founder can be a person or a company, and can have multiple
-ways to write the name, or there are founders that worked with other companies. How we propose to solve this in the standardization is to have the attributes
-in the database for both the name of the founder, as well as the company, and the years the company or the founder was active. This way, when we have a founder 
-that worked with multiple companies, or companies that had muliple founders that where named by name on the bell, we can document this, but they will come up 
-when we search for the founder.
+The Founder entity presents unique modeling challenges in campanological documentation due to its inherent complexity. 
+Bell founders may be individuals, family workshops, commercial enterprises, or combinations thereof, with varying historical 
+naming conventions and organizational structures spanning centuries. Furthermore, founders often exhibit complex 
+relationships — individuals may work under multiple establishments, companies may undergo name changes, and master founders 
+may collaborate while maintaining distinct signatures.
 
-    
+To accommodate this complexity while ensuring standardization, we propose a structured approach to founder documentation with the following attributes:
+
+\begin{itemize}
+    \item \textbf{Primary Name:} The canonical name used for indexing and primary identification
+    \item \textbf{Alternative Names:} Historical variants, orthographic differences, and aliases
+    \item \textbf{Company Name:} May be blank or contain the name of a company or workshop.
+    \item \textbf{Activity Period:} Documented years of bell-founding activity
+    \item \textbf{Geographic Locations:} Principal locations of operation
+\end{itemize}
+
+This approach allows for precise documentation of complex cases: a bell signed by individual craftsmen working under a company name 
+can be properly attributed to both entities while maintaining their relationship. Similarly, when a founder worked across multiple 
+establishments during different periods, these associations can be preserved without sacrificing searchability. 
+The schema enables researchers to query by either individual name or establishment, retrieving the complete attribution context 
+regardless of entry point.
+
+By implementing this structured yet flexible approach to founder documentation, we establish a foundation that accommodates 
+historical complexity while facilitating standardized access and cross-referencing across distributed datasets.
+
+\subsection{tower}
+
+The tower entity is the geographical location where the bell is located. It is possible that a bell is not located in a tower, but
+we still need to document the location of the bell. Then the tower entity can be filled in with minimal attributes and a remark that
+the bell is not located in a tower. So in this case the tower name is a more generic class in our model, but since most bells are located 
+in a tower, we can use the name for it to make the model more readable.
+
+The items in the tower entity are:
+
+\begin{itemize}
+    \item \textbf{Name:} The name of the tower
+    \item \textbf{Building:} The building attached to the tower, can be a church or can be empty when the tower in it self has a clear name.
+    \item \textbf{geo_coordinates:} The geographical coordinates of the tower in longitude and latitude.
+    \item \textbf{Adress:} The adress of the tower.
+    \item \textbf{height:} The height of the tower.
+    \item \textbf{height_bell:} The approxamte height of the bell in the tower.
+    \item \textbf{remark:} A remark about the tower, can be used to document that the bell is not located in a tower or other remarks.
+\end{itemize}
+
+\subsection{Carillon}
+
+The carillon entity is used to group bells in to a bigger entity, we know as a carillon. Since we sometimes have infomation on  a carillon but less on individual bells,
+it should be possible to manually enter some calculated information on the carillon.
+This also can be calculated automatically if all bells are entered in the database. 
+
+The items in the carillon entity are:
+
+\begin{itemize}
+    \item \textbf{Established:} Year that the carillon was installed.
+    \item \textbf{Number of bells:} The number of bells in the carillon.
+    \item \textbf{Total weight:} The total weight of the carillon.
+    \item \textbf{Transposition:} The pitch of the C bell in the carillon.
+\end{itemize}
+
+\subsection{Entity Relationship Diagram}
+
+\section{Files}
+
+We also want to enrich the database with files. This can be images, audiofragments, articles and more. 
+The files should be possibel to be linked to anny individual entity like Tower, Bell, Carillon or Founder.
+
+\section{Result}
+
+\section{Web App}
+
+\section{Conclusion}
+
+During our research we have designed a comprehensive minimal database model, that could be 
+the start of a more standardized apporach in documenting and sharing campanological information.
+Our development of the open source web application is still ongoing and is hosted 
+on GitHub. We welcome anny help on this subject. 
 
 \end{document}
