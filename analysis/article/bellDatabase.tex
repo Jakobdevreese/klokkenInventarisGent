@@ -161,7 +161,7 @@
             \setlength{\rightskip}{0pt plus 1fil} % Allow extra stretch on each line
             \justifying
             \noindent
-            This research presents a standardized \textbf{database schema} for campanological documentation, developed initially for the \textit{Ghent Carillon Association} while designed for broader adoption. The work identifies the \textbf{minimal structural requirements} for comprehensively documenting bells and carillons within a standardized framework, facilitating cross-institutional data exchange. An accompanying \textit{open-source Django Web Application} implements this schema, providing organizations with a customizable, self-hostable solution for campanological data management and collaborative research opportunities.
+            This research presents a standardized \textbf{database schema} for campanological documentation, developed initially for the \textbf{Ghent Carillon Association} while designed for broader adoption. The work identifies the \textbf{minimal structural requirements} for comprehensively documenting bells and carillons within a standardized framework, facilitating cross-institutional data exchange. An accompanying \textbf{open-source Django Web Application} implements this schema, providing organizations with a customizable, self-hostable solution for campanological data management and collaborative research opportunities.
           \end{minipage}
         
         \vspace{1em}
@@ -192,7 +192,7 @@ The bell entity forms the central component of our schema, documenting physical 
 
 This database schema enables independent organizations to maintain autonomous databases while ensuring structural compatibility for potential cross-institutional data exchange and aggregation. By identifying minimal required fields while allowing for extension, our approach accommodates both amateur enthusiasts with limited technical resources and professional researchers with more complex documentation needs. An accompanying open-source Django web application implements this schema, providing organizations with a customizable, self-hostable solution for campanological data management with built-in file attachment capabilities for multimedia documentation.
 
-By establishing this foundation, we facilitate the transformation of isolated bell documentation efforts into an interconnected network of compatible datasets, enhancing opportunities for collaborative research and comprehensive analysis across the field of campanology. This standardized framework represents a significant step toward preserving and studying bell heritage through structured, accessible, and interoperable data management.
+By establishing this foundation, we facilitate the transformation of isolated bell documentation efforts into an \textbf{interconnected network} of compatible datasets, enhancing opportunities for collaborative research and comprehensive analysis across the field of campanology. This standardized framework represents a significant step toward preserving and studying bell heritage through structured, accessible, and interoperable data management.
 
 \section{Introduction}
 
@@ -222,27 +222,26 @@ The primary objectives of this project are to:
     \item Facilitate the integration of distributed campanological datasets, enabling comprehensive analysis and collaborative research.
 \end{enumerate}
 
-\subsection{Background}
+\subsection{Case Studies}
 
--- TO DO --
-
-\subsection{Case studies}
-
--- TO DO --
+We see in the field of campanology a lot of different very good efforts in documenting local bell heritage and carillon culture. These efforts are cructial, but the data is often not easily used for other purposes that manually look up local data. Some of these notable efforts are listed below, that are used as inspiration for our work.
 
 \begin{enumerate}
-    \item \textbf{Dove's Guide} \href{https://dove.cccbr.org.uk/about#:~:text=Dove%E2%80%99s%20Guide%20is%20a%20resource,to%20other%20bells%20of%20interest}{link}
-    \item \textbf{american bells database} \href{https://www.bells.org/}{link}
+    \item \textbf{Towerbells}: A database of carillons and bells in North-America and elsewhere in the world. \href{https://www.towerbells.org/}{link}
+    \item \textbf{Dove's Guide of Church Bell Ringers}: A database of bells in the United Kingdom and towers in the world containing bells hung for English style "full circle" change ringing, but increased to other bells of interest. \href{https://dove.cccbr.org.uk/}{link}
+    \item \textbf{Bell Founders Database}: A database of Bell Founders accessible in different ways, maintained by Peter Dyson and Matt Dyson. \href{https://www.bellfounders.net}{link}
+    \item \textbf{The Nautical Archaeology Digital Library}: A database of ship bells from the 16th and 17th centuries. \href{https://shiplib.org/index.php/collections/artifact-collections/early-ship-bells-database/}{link} 
 \end{enumerate}
 
+There are more databases and efforts in the field of campanology, but we did not have time yet to document them all. If you know a database or effort that is not listed here, please let us know.
+
+\subsection{Background}
+
+The Ghent Carillon Association "Clocke Roeland" is a non-profit organization dedicated to the preservation and promotion of the carillon and bell heritage of Ghent and the surrounding region. The organization undertakes a range of activities, including researching and documenting bells. To support these efforts, and to address the challenges of fragmented data mangagement, and difficulties to share data, the organization initiated this project.
     
 \section{Database Schema}
 
-When designing a database schema for campanological data, we must consider the diverse range of attributes.
-We start with the smallest unit we want to document: the bell. A bell has a set of physical properties, such absence
-diamieter, height, weight and inscriptions, but also has a set of relationships with other entities, like bell founder. 
-A bell hangs most of the time in a tower, wich gives away the geographical location, and can be part of a larger entity, the carillon. 
-When we take this into account, we can start designing the database schema.
+When designing a database schema for campanological data, we must consider the diverse range of attributes. We start with the smallest unit we want to document: the bell. A bell has a set of physical properties, such absence diamieter, height, weight and inscriptions, but also has a set of relationships with other entities, like bell founder. A bell hangs most of the time in a tower, wich gives away the geographical location, and can be part of a larger entity, the carillon. When we take this into account, we can start designing the database schema.
 
 \begin{figure}[h!]
     \centering
@@ -251,10 +250,8 @@ When we take this into account, we can start designing the database schema.
     \label{fig:basic-entities}
 \end{figure}
 
-When we look at the basic entities in the campanological database schema, we see that the bell is the central entity.
-When we put this central in our database, and we add the relationships between the entities, we get a readable and 
-connectible database. To lay the basis for a standardization in this field, we off course need more. We want a minimum
-of fields that every database in our field should have, and a standardized way of taking basic field measurements.
+When we look at the basic entities in the campanological database schema, we see that the bell is the central entity. When we put this central in our database, and we add the relationships between the entities, we get a readable and 
+connectible database. To lay the basis for a standardization in this field, we off course need more. We want a minimum of fields that every database in our field should have, and a standardized way of taking basic field measurements and naming conventions.
 
 \subsection{Bell}
 
@@ -262,25 +259,31 @@ The bell is our starting point. The minimal attributes needed to describe a bell
 
 \begin{itemize}
     \item \textbf{Founder:} \\
-        The founder of a bell, this can be a person or a company. (Other enitie)
+        The founder of a bell, this can be a person or a company. (Other entity)
     \item \textbf{Weight:} \\
         The weight of the bell (in kilograms)
     \item \textbf{Pitch:} \\
         The pitch of the bell (in Hertz)
     \item \textbf{Diameter:} \\
-        The diameter of the bell (in centimeters) - TODO - add more
+        The diameter of the bell (in centimeters)
     \item \textbf{Height:} \\
-        The height of the bell (in centimeters) - TODO - add more
+        The height of the bell (in centimeters)
     \item \textbf{Inscriptions:} \\
         The inscriptions on the bell in words
     \item \textbf{Year:} \\
         The year the bell was cast.
     \item \textbf{Location:} \\
-        The location of the bell. (Other entity) - TODO - add more
+        The location of the bell. (Other entity)
 \end{itemize}
 
-Other attributes can be added to the bell entity, but these are the minimal attributes needed to describe a bell. The researchers should strive 
-to document these attributes as complete as possible for all bells.
+Other attributes can be added to the bell entity, but these are the minimal attributes needed to describe a bell. The researchers should strive to document these attributes as complete as possible for all bells.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.3\textwidth]{images/bell.png}
+    \caption{Minimal attributes for the bell entity.}
+    \label{fig:bell-entity}
+\end{figure}
 
 \subsection{Founder}
 
@@ -290,7 +293,7 @@ naming conventions and organizational structures spanning centuries. Furthermore
 relationships — individuals may work under multiple establishments, companies may undergo name changes, and master founders 
 may collaborate while maintaining distinct signatures.
 
-To accommodate this complexity while ensuring standardization, we propose a structured approach to founder documentation with the following attributes:
+To accommodate this complexity while ensuring standardization, and simplicity, we propose a structured approach to founder documentation with the following attributes:
 
 \begin{itemize}
     \item \textbf{Primary Name:} The canonical name used for indexing and primary identification
@@ -300,21 +303,22 @@ To accommodate this complexity while ensuring standardization, we propose a stru
     \item \textbf{Geographic Locations:} Principal locations of operation
 \end{itemize}
 
-This approach allows for precise documentation of complex cases: a bell signed by individual craftsmen working under a company name 
-can be properly attributed to both entities while maintaining their relationship. Similarly, when a founder worked across multiple 
-establishments during different periods, these associations can be preserved without sacrificing searchability. 
-The schema enables researchers to query by either individual name or establishment, retrieving the complete attribution context 
+This approach allows for precise documentation of complex cases: a bell signed by individual craftsmen working under a company name can be properly attributed to both entities while maintaining their relationship. Similarly, when a founder worked across multiple establishments during different periods, these associations can be preserved without sacrificing searchability. The schema enables researchers to query by either individual name or establishment, retrieving the complete attribution context 
 regardless of entry point.
 
 By implementing this structured yet flexible approach to founder documentation, we establish a foundation that accommodates 
 historical complexity while facilitating standardized access and cross-referencing across distributed datasets.
 
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.3\textwidth]{images/founder.png}
+    \caption{Minimal attributes for the founder entity.}
+    \label{fig:founder-entity}
+\end{figure}
+
 \subsection{tower}
 
-The tower entity is the geographical location where the bell is located. It is possible that a bell is not located in a tower, but
-we still need to document the location of the bell. Then the tower entity can be filled in with minimal attributes and a remark that
-the bell is not located in a tower. So in this case the tower name is a more generic class in our model, but since most bells are located 
-in a tower, we can use the name for it to make the model more readable.
+The tower entity is the geographical location where the bell is located. It is possible that a bell is not located in a tower, but we still need to document the location of the bell. Then the tower entity can be filled in with minimal attributes and a remark that the bell is not located in a tower. So in this case the tower name is a more generic class in our model, but since most bells are located in a tower, we can use the name for it to make the model more readable.
 
 The items in the tower entity are:
 
@@ -328,37 +332,92 @@ The items in the tower entity are:
     \item \textbf{remark:} A remark about the tower, can be used to document that the bell is not located in a tower or other remarks.
 \end{itemize}
 
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.3\textwidth]{images/tower.png}
+    \caption{Minimal attributes for the tower entity.}
+    \label{fig:tower-entity}
+\end{figure}
+
 \subsection{Carillon}
 
-The carillon entity is used to group bells in to a bigger entity, we know as a carillon. Since we sometimes have infomation on  a carillon but less on individual bells,
+The carillon entity is used to group bells in to a bigger entity, we know as a carillon. Since we sometimes have infomation on a carillon but less on individual bells,
 it should be possible to manually enter some calculated information on the carillon.
-This also can be calculated automatically if all bells are entered in the database. 
+This also can be calculated automatically if all bells are all entered in the database. 
 
 The items in the carillon entity are:
 
 \begin{itemize}
+    \item \textbf{Tower:} The tower where the carillon is located. (Other entity)
     \item \textbf{Established:} Year that the carillon was installed.
     \item \textbf{Number of bells:} The number of bells in the carillon.
     \item \textbf{Total weight:} The total weight of the carillon.
     \item \textbf{Transposition:} The pitch of the C bell in the carillon.
+    \item \textbf{Keyboard Standard:} The keyboard standard used in the carillon.
+    \item \textbf{Remark:} A remark about the carillon.
 \end{itemize}
 
-\subsection{Entity Relationship Diagram}
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.3\textwidth]{images/carillon.png}
+    \caption{Minimal attributes for the carillon entity.}
+    \label{fig:carillon-entity}
+\end{figure}
 
-\section{Files}
+\section{Entity Relationship Diagram}
 
-We also want to enrich the database with files. This can be images, audiofragments, articles and more. 
-The files should be possibel to be linked to anny individual entity like Tower, Bell, Carillon or Founder.
+When we put the entities and the relationships between the entities in a diagram, we get a clear overview of the database schema. This diagram can be used as a minimum for the standard in the field of campanology. Later we see that we add some more attributes because of local needs for our open-source web application. And we also see that we add the file entity to the database, to make it possible to store images, audio fragments and more in the database, and link them to all different entities in our schema.
 
-\section{Result}
+\clearpage
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/basic_erd.png}
+    \caption{Basic ERD for the campanological database schema.}
+    \label{fig:basic-erd}
+\end{figure}
+
+
+\section{Enhanced Database Schema}
+
+When we look at the basic entities, needed to uniquelie identify the different entities, we see that we easely can imagin needing more attributes to make the database more usefull. Next to that we want to enrich the database with files. This can be images, audiofragments, articles and more. In this section we go over the database design we use in our open-source web application for the Ghent Carillon Association.
+
+\subsection{Files}
+
+The file entity is used to store files. These files can be related to anny entity in the database. For simplicity we want a generic format that can store all neassecary meta data. The file entity has the following attributes:
+
+\begin{itemize}
+    \item \textbf{File:} The file itself.
+    \item \textbf{File type:} The type of the file, can be image, audio, article or other.
+    \item \textbf{File name:} The name of the file.
+    \item \textbf{Comments:} Comments on the file.
+    \item \textbf{Entity:} The entity the file is related to. (Other entity)
+\end{itemize}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.3\textwidth]{images/file.png}
+    \caption{File attribute in the Ghent Carillon Association database.}
+    \label{fig:file-entity}
+\end{figure}
+
+\subsection{Final ERD}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/erd_inventaris_gent.png}
+    \caption{ERD used for the web application.}
+    \label{fig:erd-ghent}
+\end{figure}
 
 \section{Web App}
 
+-- TO DO -- 
+
+We have the frontend and backend in django, data managers, and a simple layout in bootstrap.
+
 \section{Conclusion}
 
-During our research we have designed a comprehensive minimal database model, that could be 
-the start of a more standardized apporach in documenting and sharing campanological information.
-Our development of the open source web application is still ongoing and is hosted 
-on GitHub. We welcome anny help on this subject. 
+-- TO DO --
 
 \end{document}
