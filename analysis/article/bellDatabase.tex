@@ -245,7 +245,7 @@ There are more databases and efforts in the field of campanology, but we did not
 
 \subsection{Background}
 
-The Ghent Carillon Association \"Clocke Roeland\" is a non-profit organization dedicated to the preservation and promotion of the carillon and bell heritage of Ghent and the surrounding region. The organization undertakes a range of activities, including researching and documenting bells. To support these efforts, and to address the challenges of fragmented data mangagement, and difficulties to share data, the organization initiated this project.
+The Ghent Carillon Association \textbf{Clocke Roeland} is a non-profit organization dedicated to the preservation and promotion of the carillon and bell heritage of Ghent and the surrounding region. The organization undertakes a range of activities, including researching and documenting bells. To support these efforts, and to address the challenges of fragmented data mangagement, and difficulties to share data, the organization initiated this project.
     
 \section{Database Schema}
 
@@ -387,7 +387,7 @@ This approach ensures researchers can quickly identify a bell's current location
 
 \begin{figure}[h!]
     \centering
-    \includegraphics[width=0.3\textwidth]{images/tower_bell.png}
+    \includegraphics[width=0.8\textwidth]{images/tower_bell.png}
     \caption{Relationship between tower and bell entity.}
     \label{fig:tower_bell-relation}
 \end{figure}
@@ -436,7 +436,7 @@ This approach balances the need for structured data with respect for the nuanced
 
 \begin{figure}[h!]
     \centering
-    \includegraphics[width=0.3\textwidth]{images/carillon_bell.png}
+    \includegraphics[width=0.8\textwidth]{images/carillon_bell.png}
     \caption{Relationship between carillon and bell entity.}
     \label{fig:carillon_bell-relation}
 \end{figure}
@@ -446,8 +446,6 @@ This approach balances the need for structured data with respect for the nuanced
 When we put the entities and the relationships between the entities in a diagram, we get a clear overview of the database schema. This diagram can be used as a minimum for the standard in the field of campanology. This schema can be used as a starting point, but is easely extendable with more entities and even relationships. But by maintaining the basis of the database schema, we can ensure that the databases accross the field are compatible and connectible. 
 
 The basic ERD is also extended with a \textbf{File entity}. This entity is used to couple files to other entities in the database, and enrich the data with pictures, audio, articles and more. This entity is not mandatory, but can be used to make the database more usefull and complete.
-
-\clearpage
 
 \begin{figure}[h!]
     \centering
@@ -472,6 +470,7 @@ In conclusion, this standardized schema represents an important step toward tran
 
 \section{References}
 
+\nocite{*}
 \bibliographystyle{apalike}
 \bibliography{references}
 
