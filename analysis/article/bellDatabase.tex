@@ -20,6 +20,9 @@
 \usepackage{caption} % For captions
 \usepackage{hyperref} % For hyperlinks
 
+\usepackage{natbib}  % Advanced citation commands
+\usepackage{url}     % For formatting URLs
+\usepackage{doi}     % For DOI hyperlinks
 
 % -------------------------------------------------------------
 % Font
@@ -228,7 +231,7 @@ This research is the first step in a wider project that will culminate in an ope
 
 \subsection{Case Studies}
 
-We see in the field of campanology a lot of different very good efforts in documenting local bell heritage and carillon culture. These efforts are cructial, but the data is often not easily used for other purposes that manually look up local data. Some of these notable efforts are listed below, that are used as inspiration for our work.
+We see in the field of campanology a lot of different very good efforts in documenting local bell heritage and carillon culture. These efforts are cructial, but the data is often not easily used for other purposes than manually look up local data. Some of these notable efforts are listed below, that are used as inspiration for our work.
 
 \begin{enumerate}
     \item \textbf{Towerbells}: A database of carillons and bells in North-America and elsewhere in the world. \href{https://www.towerbells.org/}{link}
@@ -242,7 +245,7 @@ There are more databases and efforts in the field of campanology, but we did not
 
 \subsection{Background}
 
-The Ghent Carillon Association "Clocke Roeland" is a non-profit organization dedicated to the preservation and promotion of the carillon and bell heritage of Ghent and the surrounding region. The organization undertakes a range of activities, including researching and documenting bells. To support these efforts, and to address the challenges of fragmented data mangagement, and difficulties to share data, the organization initiated this project.
+The Ghent Carillon Association \"Clocke Roeland\" is a non-profit organization dedicated to the preservation and promotion of the carillon and bell heritage of Ghent and the surrounding region. The organization undertakes a range of activities, including researching and documenting bells. To support these efforts, and to address the challenges of fragmented data mangagement, and difficulties to share data, the organization initiated this project.
     
 \section{Database Schema}
 
@@ -314,18 +317,35 @@ regardless of entry point.
 By implementing this structured yet flexible approach to founder documentation, we establish a foundation that accommodates 
 historical complexity while facilitating standardized access and cross-referencing across distributed datasets.
 
-\subsubsection{Relationship Founder - Bell}
-
-The relationship between the founder and the bell is a many-to-many relationship. A founder can have cast multiple bells, but a bell also can have multiple founders. With this we mean that a bell trough the ages can have been recast, or significant work has been done on the bell that is worth documenting. This means we need a table to document this relationship, and the relationship itself has attributes like when the work has been done, and what kind of work has been done. We also need to document if the relationship is the first (initial cast) or a later relationship.
-
--- TO DO --
-
 \begin{figure}[h!]
     \centering
     \includegraphics[width=0.3\textwidth]{images/founder.png}
     \caption{Minimal attributes for the founder entity.}
     \label{fig:founder-entity}
 \end{figure}
+
+\subsubsection{Relationship Founder - Bell}
+
+The relationship between founders and bells represents a \textbf{many-to-many association} with significant temporal complexity. While a founder typically casts numerous bells throughout their career, a single bell may also be associated with multiple founders across its lifetime. This occurs when bells are recast, restored, or undergo significant modifications that warrant documentation. 
+
+To properly capture this historical complexity, we require a dedicated relationship table that includes temporal attributes documenting when work was performed, the nature of the intervention (casting, recasting, restoration), and whether the relationship represents the bell's original creation or a subsequent modification. This approach allows researchers to trace the complete lifecycle of a bell while maintaining accurate attribution of each craftsman's contribution to its current state. The relationship entity contains attributes such as:
+
+\begin{itemize}
+    \item \textbf{Date of Work:} When the founding or modification occurred
+    \item \textbf{Type of Intervention:} Original casting, recasting, repair, etc.
+    \item \textbf{Primary Attribution:} Whether this represents the bell's original creation
+    \item \textbf{Additional Notes:} Documentation of specific work performed
+\end{itemize}
+
+This structure ensures comprehensive documentation of each bell's provenance while maintaining the integrity of historical attribution chains across centuries of potential modifications.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.3\textwidth]{images/founder_bell.png}
+    \caption{Relationship between founder and bell entity.}
+    \label{fig:founder_bell-relation}
+\end{figure}
+
 
 \subsection{tower}
 
@@ -352,9 +372,25 @@ The items in the tower entity are:
 
 \subsubsection{Relationship Bell - Tower}
 
-The relationship betweet the \textbf{bell} and its location, or \textbf{tower}, is also a many-to-many relationship. A bell is more than once moved from location in its lifetime. It is important that the current location is unambiguously documented, and that it is easy to see where the bell hangs now. On the other hand we also want to document the historical locations of the bell, so the extra table is needed to document the relationship with attributes to document some extra information about the relationship.
+The relationship between the \textbf{bell} and its location (\textbf{tower}) represents another \textbf{many-to-many association} with historical significance. Throughout their lifetimes, bells frequently migrate between locations — sometimes due to renovations, institutional changes, or preservation efforts. While documenting a bell's current location unambiguously is essential for practical access and research, capturing its complete spatial history provides valuable context for understanding its cultural and historical significance.
 
--- TO DO --
+This temporal-spatial complexity necessitates a dedicated relationship table with attributes that document when and why location changes occurred. The relationship entity should contain:
+
+\begin{itemize}
+    \item \textbf{Time Period:} Start and end dates of the bell's presence at a location
+    \item \textbf{Current Location Flag:} Boolean indicator of the bell's present location
+    \item \textbf{Reason for Movement:} Documentation of why the bell was relocated
+    \item \textbf{Installation Details:} Information about the bell's mounting, accessibility, and position
+\end{itemize}
+
+This approach ensures researchers can quickly identify a bell's current location while preserving its complete geographical provenance for historical analysis and cultural heritage documentation.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.3\textwidth]{images/tower_bell.png}
+    \caption{Relationship between tower and bell entity.}
+    \label{fig:tower_bell-relation}
+\end{figure}
 
 \subsection{Carillon}
 
@@ -383,13 +419,33 @@ The items in the carillon entity are:
 
 \subsubsection{Relationship Carillon - Bell}
 
-The relationship between the carillon and the bell is a many-to-many relationship. A carillon can have multiple bells, and a bell can be part of multiple carillons. This is because a bell can be moved from one carillon to another, or the carillon has had such a transforming transformation that we actually can speak of a new carillon since the simillarities with the old carillon are almost non-existant. This is hard to judge, and partly subjective. Designing comprehensive rules and guidlines for this is hard, but we can say that consensus is most of the time formed after a while on this mather in the carillon world. So we could as a guidline use the consensus and advise the data manager to follow this consensus.
+The relationship between carillons and bells represents another \textbf{many-to-many association} with both temporal and conceptual dimensions. A carillon comprises multiple bells, while individual bells may belong to different carillons throughout their history — either through physical relocation or through significant transformations of the carillon itself. 
 
--- TO DO --
+This latter case presents an interesting ontological challenge: when a carillon undergoes substantial renovation, expansion, or reconfiguration, campanologists may consider it a new instrument despite maintaining some original elements. The determination of whether modifications constitute a new carillon or merely an evolution of the existing one often involves subjective judgment informed by factors such as:
+
+\begin{itemize}
+    \item \textbf{Scope of Change:} The percentage of bells replaced or added
+    \item \textbf{Keyboard Modification:} Significant alterations to playing mechanisms
+    \item \textbf{Tonal Transformation:} Fundamental changes to the instrument's musical character
+    \item \textbf{Historical Discontinuity:} Periods of disuse or complete dismantling between configurations
+\end{itemize}
+
+Rather than imposing rigid classification rules for these complex cases, our model accommodates the evolving consensus of the campanological community. The relationship table allows documentation of bell membership in multiple carillon configurations while preserving the historical narratives that connect them. Database managers are advised to follow established conventions within the field while documenting the rationale for classification decisions in accompanying notes.
+
+This approach balances the need for structured data with respect for the nuanced historical judgments that characterize campanological scholarship.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.3\textwidth]{images/carillon_bell.png}
+    \caption{Relationship between carillon and bell entity.}
+    \label{fig:carillon_bell-relation}
+\end{figure}
 
 \section{Entity Relationship Diagram}
 
-When we put the entities and the relationships between the entities in a diagram, we get a clear overview of the database schema. This diagram can be used as a minimum for the standard in the field of campanology. Later we see that we add some more attributes because of local needs for our open-source web application. And we also see that we add the file entity to the database, to make it possible to store images, audio fragments and more in the database, and link them to all different entities in our schema.
+When we put the entities and the relationships between the entities in a diagram, we get a clear overview of the database schema. This diagram can be used as a minimum for the standard in the field of campanology. This schema can be used as a starting point, but is easely extendable with more entities and even relationships. But by maintaining the basis of the database schema, we can ensure that the databases accross the field are compatible and connectible. 
+
+The basic ERD is also extended with a \textbf{File entity}. This entity is used to couple files to other entities in the database, and enrich the data with pictures, audio, articles and more. This entity is not mandatory, but can be used to make the database more usefull and complete.
 
 \clearpage
 
@@ -400,41 +456,23 @@ When we put the entities and the relationships between the entities in a diagram
     \label{fig:basic-erd}
 \end{figure}
 
-
-\section{Enhanced Database Schema}
-
-When we look at the basic entities, needed to uniquelie identify the different entities, we see that we easely can imagin needing more attributes to make the database more usefull. Next to that we want to enrich the database with files. This can be images, audiofragments, articles and more. In this section we go over the database design we use in our open-source web application for the Ghent Carillon Association.
-
-\subsection{Files}
-
-The file entity is used to store files. These files can be related to anny entity in the database. For simplicity we want a generic format that can store all neassecary meta data. The file entity has the following attributes:
-
-\begin{itemize}
-    \item \textbf{File:} The file itself.
-    \item \textbf{File type:} The type of the file, can be image, audio, article or other.
-    \item \textbf{File name:} The name of the file.
-    \item \textbf{Comments:} Comments on the file.
-    \item \textbf{Entity:} The entity the file is related to. (Other entity)
-\end{itemize}
-
-\begin{figure}[h!]
-    \centering
-    \includegraphics[width=0.3\textwidth]{images/file.png}
-    \caption{File attribute in the Ghent Carillon Association database.}
-    \label{fig:file-entity}
-\end{figure}
-
-\subsection{Final ERD}
-
-\begin{figure}[h!]
-    \centering
-    \includegraphics[width=0.8\textwidth]{images/erd_inventaris_gent.png}
-    \caption{ERD used for the web application.}
-    \label{fig:erd-ghent}
-\end{figure}
-
 \section{Conclusion}
 
--- TO DO --
+This research addresses a gap in the field of campanology by proposing a standardized database schema for comprehensive bell heritage documentation. Our approach is distinguished by several key characteristics that balance standardization with flexibility:
+
+First, by identifying four core entities—bells, founders, towers, and carillons — with their essential attributes and complex interconnections, we establish a minimal but sufficient framework that can serve diverse documentation needs. This framework accommodates the historical complexity inherent to campanological research, particularly the temporal and conceptual challenges posed by evolving relationships between entities over centuries.
+
+Second, our proposed schema recognizes and addresses the unique ontological challenges of campanological documentation, such as the subjective determination of when modifications constitute a new carillon, the complexities of founder attribution across time, and the migratory nature of bells throughout their lifespans. Rather than imposing rigid classification systems, the model incorporates flexibility while maintaining structural integrity.
+
+Third, by designing the schema as an extensible foundation rather than an exhaustive prescription, we enable adaptation to specific research contexts while preserving cross-institutional compatibility. This approach respects the valuable domain expertise of both professional researchers and amateur enthusiasts, allowing specialized documentation within a standardized framework.
+
+Looking forward, the complementary \textbf{open-source Django web application} currently in development will make this schema accessible to organizations with limited technical resources. Future work should focus on developing further standarized measurments and naming conventions to complement the structural standards proposed here. 
+
+In conclusion, this standardized schema represents an important step toward transforming isolated bell documentation efforts into an interconnected network of compatible datasets. While acknowledging that complete standardization across all campanological documentation may remain elusive, this framework offers a practical balance between structure and flexibility that can significantly enhance collaborative research opportunities and comprehensive analysis across the rich and diverse field of campanology.
+
+\section{References}
+
+\bibliographystyle{apalike}
+\bibliography{references}
 
 \end{document}
