@@ -24,25 +24,17 @@ class Bell(models.Model):
         verbose_name='Gewicht (kg)',
         validators=[MinValueValidator(0.0)]
     )
+    diameter = models.FloatField(
+        verbose_name='Diameter (cm)',
+        validators=[MinValueValidator(0.0)]
+    )
+    height = models.FloatField(
+        verbose_name='Hoogte (cm)',
+        validators=[MinValueValidator(0.0)]
+    )
     ornaments = models.CharField(max_length=100, verbose_name='Versiering', blank=True, null=True)
     function = models.CharField(max_length=100, verbose_name='Functie')
-    manufacturer = models.ForeignKey(
-        'Manufacturer', 
-        on_delete=models.CASCADE,
-        verbose_name='Gieter'
-    )
-    carillon = models.ForeignKey(
-        'Carillon', 
-        on_delete=models.CASCADE,
-        verbose_name='Beiaard'
-    )
-    location = models.ForeignKey(
-        'Tower', 
-        on_delete=models.CASCADE,
-        verbose_name='Toren'
-    )
-    location_comment = models.CharField(max_length=255, verbose_name='Locatie Opmerking', blank=True, null=True)
-    comments = models.TextField(verbose_name='Opmerkingen', blank=True, null=True)
+    remarks = models.TextField(verbose_name='Opmerkingen', blank=True, null=True)
 
     class Meta:
         verbose_name = 'Klok'
@@ -53,12 +45,13 @@ class Bell(models.Model):
 
 # Manufacturer model
 # Manufacturer(id, name, isCompany, adress, country, years_operations, comments)
-class Manufacturer(models.Model):
+class Founder(models.Model):
     id = models.AutoField(primary_key=True, verbose_name='ID')
-    name = models.CharField(max_length=100, verbose_name='Naam')
+    primary_name = models.CharField(max_length=100, verbose_name='Naam')
+    alternative_name = models.CharField(max_length=100, verbose_name='Alternatieve naam', blank=True, null=True)
     isCompany = models.BooleanField(verbose_name='Is een bedrijf')
-    adress = models.CharField(max_length=255, verbose_name='Adres', blank=True, null=True)
-    country = models.CharField(max_length=100, verbose_name='Land')
+    company_name = models.CharField(max_length=100, verbose_name='Bedrijfsnaam', blank=True, null=True)
+    geographic_location = models.CharField(max_length=100, verbose_name='Land')
     years_operations = models.CharField(max_length=100, verbose_name='Jaren actief', blank=True, null=True)
     comments = models.TextField(verbose_name='Opmerkingen', blank=True, null=True)
 
@@ -69,14 +62,32 @@ class Manufacturer(models.Model):
     
     def __str__(self):
         return f"{self.name} - {self.country}"
+    
+# Many to many relationship between Bell and Manufacturer
+class BellManufacturer(models.Model):
+    bell = models.ForeignKey(Bell, on_delete=models.CASCADE)
+    manufacturer = models.ForeignKey(Founder, on_delete=models.CASCADE)
+    dateOfWork = models.DateField(verbose_name='Datum van werken', blank=True, null=True)
+    typeOfWork = models.CharField(max_length=100, verbose_name='Type van werken', blank=True, null=True)
+    isPrimaryFounder = models.BooleanField(verbose_name='Is primaire gieter', default=False)
+    remarks = models.TextField(verbose_name='Opmerkingen', blank=True, null=True)
+
+    class Meta:
+        unique_together = ('bell', 'manufacturer')
+        verbose_name = 'Klok Gieter'
+        verbose_name_plural = 'Klokken Gieters'
+    
+    def __str__(self):
+        return f"{self.bell.name} - {self.manufacturer.name}"
 
 # Tower model
 # Tower(id, name, church, geo_coordinates, heigt, height_bells, comments, contacts)
 class Tower(models.Model):
     id = models.AutoField(primary_key=True, verbose_name='ID')
     name = models.CharField(max_length=100, verbose_name='Naam')
-    church = models.CharField(max_length=100, verbose_name='Kerk')
+    building = models.CharField(max_length=100, verbose_name='Kerk')
     geo_coordinates = models.CharField(max_length=100, verbose_name='Geografische Coördinaten', blank=True, null=True)
+    adress = models.CharField(max_length=100, verbose_name='Adres', blank=True, null=True)
     height = models.FloatField(
         verbose_name='Hoogte (m)',
         validators=[MinValueValidator(0.0), MaxValueValidator(100.0)]
@@ -94,13 +105,36 @@ class Tower(models.Model):
         ordering = ['name']
     
     def __str__(self):
-        return f"{self.name} - {self.church}"
+        return f"{self.name} - {self.building}"
+
+# Many to many relationship between Tower and Bell
+class TowerBell(models.Model):
+    tower = models.ForeignKey(Tower, on_delete=models.CASCADE)
+    bell = models.ForeignKey(Bell, on_delete=models.CASCADE)
+    isCurrentLocation = models.BooleanField(verbose_name='Huidige locatie', default=False)
+    startDate = models.DateField(verbose_name='Startdatum', blank=True, null=True)
+    endDate = models.DateField(verbose_name='Einddatum', blank=True, null=True)
+    installationDetails = models.TextField(verbose_name='Installatie details', blank=True, null=True)
+    reasonOfMovement = models.TextField(verbose_name='Reden van verplaatsing', blank=True, null=True)
+    remarks = models.TextField(verbose_name='Opmerkingen', blank=True, null=True)
+
+    class Meta:
+        unique_together = ('tower', 'bell')
+        verbose_name = 'Toren Klok'
+        verbose_name_plural = 'Torens Klokken'
+    
+    def __str__(self):
+        return f"{self.tower.name} - {self.bell.name}"
 
 # Carillon model
 # Carillon(id, name, established, number_of_bells, total_weight, comments, transposition)
 class Carillon(models.Model):
     id = models.AutoField(primary_key=True, verbose_name='ID')
-    name = models.CharField(max_length=100, verbose_name='Naam')
+    tower = models.ForeignKey(
+        'Tower', 
+        on_delete=models.CASCADE,
+        verbose_name='Toren'
+    )
     established = models.IntegerField(
         verbose_name='Ingebruikname',
         validators=[MinValueValidator(600), MaxValueValidator(2100)]
@@ -115,12 +149,8 @@ class Carillon(models.Model):
     )
     comments = models.TextField(verbose_name='Opmerkingen', blank=True, null=True)
     transposition = models.CharField(max_length=20, verbose_name='Transpositie', blank=True, null=True)
-    tower = models.ForeignKey(
-        'Tower', 
-        on_delete=models.CASCADE,
-        verbose_name='Toren'
-    )
-
+    keyboard_standard = models.CharField(max_length=20, verbose_name='Toetsenbord standaard', blank=True, null=True)
+    
     class Meta:
         verbose_name = 'Beiaard'
         verbose_name_plural = 'Beiaarden'
@@ -128,6 +158,22 @@ class Carillon(models.Model):
     
     def __str__(self):
         return f"{self.name} - {self.established} - {self.tower.name}"
+
+# Many to many relationship between Carillon and Bell
+class CarillonBell(models.Model):
+    carillon = models.ForeignKey(Carillon, on_delete=models.CASCADE)
+    bell = models.ForeignKey(Bell, on_delete=models.CASCADE)
+    startDate = models.DateField(verbose_name='Startdatum', blank=True, null=True)
+    endDate = models.DateField(verbose_name='Einddatum', blank=True, null=True)
+    remarks = models.TextField(verbose_name='Opmerkingen', blank=True, null=True)
+
+    class Meta:
+        unique_together = ('carillon', 'bell')
+        verbose_name = 'Beiaard Klok'
+        verbose_name_plural = 'Beiaarden Klokken'
+    
+    def __str__(self):
+        return f"{self.carillon.name} - {self.bell.name}"
 
 # File model
 # File(id, file, file_type, comments, bell_id, carillon_id, manifacturer_id, tower_id)
