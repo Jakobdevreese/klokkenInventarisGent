@@ -207,7 +207,7 @@ class File(models.Model):
         null=True
     )
     founder = models.ForeignKey(
-        'Manufacturer', 
+        'Founder', 
         on_delete=models.CASCADE,
         verbose_name='Gieter',
         blank=True,
@@ -240,7 +240,6 @@ class Bell_Tower(models.Model):
     id = models.AutoField(primary_key=True, verbose_name='ID')
     tower = models.ForeignKey(Tower, on_delete=models.CASCADE)
     bell = models.ForeignKey(Bell, on_delete=models.CASCADE)
-    isCurrentLocation = models.BooleanField(verbose_name='Huidige locatie', default=False)
     start_date = models.DateField(  # Snake_case naming
         verbose_name='Startdatum', 
         blank=True, 
@@ -285,9 +284,9 @@ class Carillon_Bell(models.Model):
     id = models.AutoField(primary_key=True, verbose_name='ID')
     carillon = models.ForeignKey(Carillon, on_delete=models.CASCADE)
     bell = models.ForeignKey(Bell, on_delete=models.CASCADE)
-    startDate = models.DateField(verbose_name='Startdatum', blank=True, null=True)
-    endDate = models.DateField(verbose_name='Einddatum', blank=True, null=True)
-    relativePitch = models.CharField(max_length=25, blank=True, null=True)
+    start_date = models.DateField(verbose_name='Startdatum', blank=True, null=True)  # Changed from startDate
+    end_date = models.DateField(verbose_name='Einddatum', blank=True, null=True)    # Changed from endDate
+    relative_pitch = models.CharField(max_length=25, blank=True, null=True)         # Changed from relativePitch
     comments = models.TextField(verbose_name='Opmerkingen', blank=True, null=True)
 
     class Meta:
@@ -296,7 +295,7 @@ class Carillon_Bell(models.Model):
         verbose_name_plural = 'Beiaarden Klokken'
     
     def __str__(self):
-        return f"{self.carillon.name} - {self.bell.name}"
+        return f"{self.carillon.tower.name} - {self.bell.name}"
 
 
 # Bell_Founder(id, bell_id, founder_id, dateOfWork, typeOfWork, isPrimaryFounder, comments)
@@ -330,4 +329,4 @@ class Bell_Founder(models.Model):
         verbose_name_plural = 'Klokken Gieters'
     
     def __str__(self):
-        return f"{self.bell.name} - {self.founder.name}"
+        return f"{self.bell.name} - {self.founder.primary_name}" 
