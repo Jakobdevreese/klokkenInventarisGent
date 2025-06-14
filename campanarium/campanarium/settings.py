@@ -15,6 +15,20 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Static files (CSS, JavaScript, Images)
+STATIC_URL = '/static/'
+
+# Directories where Django will look for static files
+STATICFILES_DIRS = [
+    BASE_DIR / 'static',
+]
+
+# Directory where collectstatic will collect all static files for production
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+# Media files (user uploads)
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
@@ -37,6 +51,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.gis',
     'inventory',
 ]
 
@@ -76,7 +91,7 @@ WSGI_APPLICATION = 'campanarium.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
+        'ENGINE': 'django.contrib.gis.db.backends.spatialite',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }

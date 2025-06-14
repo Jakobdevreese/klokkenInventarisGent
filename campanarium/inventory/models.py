@@ -22,27 +22,35 @@ from django.contrib.gis.db import models as gis_models
 # Bell(id, name, weight, height, diameter, inscription, pitch, installation, year, function, comments)
 class Bell(models.Model):
     id = models.AutoField(primary_key=True, verbose_name='ID')
-    name = models.CharField(max_length=100, verbose_name='Naam')
+    name = models.CharField(max_length=100, verbose_name='Naam', blank=True, null=True)
     weight = models.FloatField(
         verbose_name='Gewicht (kg)',
-        validators=[MinValueValidator(0.0)]
+        validators=[MinValueValidator(0.0)],
+        blank=True,
+        null=True
     )
     height = models.FloatField(
         verbose_name='Hoogte (cm)',
-        validators=[MinValueValidator(0.0)]
+        validators=[MinValueValidator(0.0)],
+        blank=True,
+        null=True
     )
     diameter = models.FloatField(
         verbose_name='Diameter (cm)',
-        validators=[MinValueValidator(0.0)]
+        validators=[MinValueValidator(0.0)],
+        blank=True,
+        null=True
     )
     inscription = models.CharField(max_length=255, verbose_name='Inscriptie', blank=True, null=True)
-    pitch = models.CharField(max_length=20, verbose_name='Slagtoon')
-    installation = models.CharField(max_length=255, verbose_name='Opstelling')
+    pitch = models.CharField(max_length=20, verbose_name='Slagtoon', blank=True, null=True)
+    installation = models.CharField(max_length=255, verbose_name='Opstelling', blank=True, null=True)
     year = models.IntegerField(
         verbose_name='Gietjaar',
-        validators=[MinValueValidator(600), MaxValueValidator(2100)]
+        validators=[MinValueValidator(600), MaxValueValidator(2100)],
+        blank=True,
+        null=True
     )
-    function = models.CharField(max_length=100, verbose_name='Functie')
+    function = models.CharField(max_length=100, verbose_name='Functie', blank=True, null=True)
     comments = models.TextField(verbose_name='Opmerkingen', blank=True, null=True)
 
     class Meta:
@@ -56,12 +64,13 @@ class Bell(models.Model):
 # Founder(id, primary_name, alternative_names, company_name, active_period, geographic_location, country, comments)
 class Founder(models.Model):
     id = models.AutoField(primary_key=True, verbose_name='ID')
-    primary_name = models.CharField(max_length=100, verbose_name='Naam')
+    primary_name = models.CharField(max_length=100, verbose_name='Naam', blank=True, null=True)
     alternative_names = models.JSONField(
         default=list, 
         blank=True, 
         verbose_name='Alternatieve namen',
-        help_text='Lijst van alternatieve namen'
+        help_text='Lijst van alternatieve namen',
+        null=True
     )
     company_name = models.CharField(max_length=100, verbose_name='Bedrijfsnaam', blank=True, null=True)
     active_period = models.CharField(
@@ -71,8 +80,8 @@ class Founder(models.Model):
         null=True,
         help_text='Bijvoorbeeld: "1850-1900", "ca. 1860", "vroege 19e eeuw", "actief rond 1875"'
     )
-    geographic_location = models.CharField(max_length=255, verbose_name='Regio', help_text='Bijvoorbeeld: "Vlaanderen", "Braband", "Nederland",...')
-    country = models.CharField(max_length=255, verbose_name='Land', help_text='Land van oprichting')
+    geographic_location = models.CharField(max_length=255, verbose_name='Regio', help_text='Bijvoorbeeld: "Vlaanderen", "Braband", "Nederland",...', blank=True, null=True)
+    country = models.CharField(max_length=255, verbose_name='Land', help_text='Land van oprichting', blank=True, null=True) 
     comments = models.TextField(verbose_name='Opmerkingen', blank=True, null=True)
 
     class Meta:
@@ -87,8 +96,8 @@ class Founder(models.Model):
 # Tower(id, name, building, geo_coordinates, adress, height, height_bells, comments, contact_info)
 class Tower(models.Model):
     id = models.AutoField(primary_key=True, verbose_name='ID')
-    name = models.CharField(max_length=100, verbose_name='Naam')
-    building = models.CharField(max_length=100, verbose_name='Kerk of naam gebouw')
+    name = models.CharField(max_length=100, verbose_name='Naam', blank=True, null=True)
+    building = models.CharField(max_length=100, verbose_name='Kerk of naam gebouw', blank=True, null=True)
     geo_coordinates = gis_models.PointField(
         verbose_name='Geografische Coördinaten',
         blank=True,
@@ -98,7 +107,7 @@ class Tower(models.Model):
     street_address = models.CharField(max_length=200, verbose_name='Straat en huisnummer', blank=True, null=True)
     postal_code = models.CharField(max_length=10, verbose_name='Postcode', blank=True, null=True)
     city = models.CharField(max_length=100, verbose_name='Stad/Gemeente', blank=True, null=True)
-    country = models.CharField(max_length=100, verbose_name='Land', default='België')
+    country = models.CharField(max_length=100, verbose_name='Land', default='België', blank=True, null=True)
 
     # Full address for display/search
     full_address = models.CharField(
@@ -111,11 +120,15 @@ class Tower(models.Model):
 
     height = models.FloatField(
         verbose_name='Hoogte (m)',
-        validators=[MinValueValidator(0.0), MaxValueValidator(100.0)]
+        validators=[MinValueValidator(0.0), MaxValueValidator(100.0)],
+        blank=True,
+        null=True
     )
     height_bells = models.FloatField(
         verbose_name='Hoogte klokken (m)',
-        validators=[MinValueValidator(0.0), MaxValueValidator(100.0)]
+        validators=[MinValueValidator(0.0), MaxValueValidator(100.0)],
+        blank=True,
+        null=True
     )
     comments = models.TextField(verbose_name='Opmerkingen', blank=True, null=True)
     contact_info = models.TextField(verbose_name='Contacten', blank=True, null=True)
@@ -147,15 +160,21 @@ class Carillon(models.Model):
     )
     established = models.IntegerField(
         verbose_name='Ingebruikname',
-        validators=[MinValueValidator(600), MaxValueValidator(2100)]
+        validators=[MinValueValidator(600), MaxValueValidator(2100)],
+        blank=True,
+        null=True
     )
     number_of_bells = models.IntegerField(
         verbose_name='Aantal klokken',
-        validators=[MinValueValidator(0), MaxValueValidator(80)]
+        validators=[MinValueValidator(0), MaxValueValidator(80)],
+        blank=True,
+        null=True
     )
     total_weight = models.FloatField(
         verbose_name='Totaal gewicht (kg)',
-        validators=[MinValueValidator(0.0), MaxValueValidator(100_000.0)]
+        validators=[MinValueValidator(0.0), MaxValueValidator(100_000.0)],
+        blank=True,
+        null=True
     )
     transposition = models.CharField(max_length=20, verbose_name='Transpositie', blank=True, null=True)
     keyboard_standard = models.CharField(max_length=20, verbose_name='Toetsenbord standaard', blank=True, null=True)
