@@ -1,0 +1,13 @@
+# Keep the build context (and git-URL builds) small and clean.
+.git/
+myvenv/
+**/__pycache__/
+*.pyc
+**/db.sqlite3
+**/db.sqlite3-journal
+campanarium/media/
+campanarium/staticfiles/
+analysis/
+.claude/
+*.md
+!README.md

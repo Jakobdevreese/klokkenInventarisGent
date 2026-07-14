@@ -24,6 +24,9 @@ SECRET_KEY = os.environ.get(
 DEBUG = os.environ.get('DEBUG', 'True').lower() not in ('false', '0', 'no', '')
 # Comma-separated list, e.g. ALLOWED_HOSTS="klokken.example.be,192.168.0.10".
 ALLOWED_HOSTS = [h.strip() for h in os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',') if h.strip()]
+# Needed for HTTPS POST (forms) once served behind a TLS reverse proxy, e.g.
+# CSRF_TRUSTED_ORIGINS="https://klokkeninventaris.sonataduo.com".
+CSRF_TRUSTED_ORIGINS = [o.strip() for o in os.environ.get('CSRF_TRUSTED_ORIGINS', '').split(',') if o.strip()]
 
 
 # --- Applications ----------------------------------------------------------
