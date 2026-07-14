@@ -109,10 +109,24 @@ USE_TZ = True
 # --- Static & media --------------------------------------------------------
 # App-level static (inventory/static/) is found automatically; no STATICFILES_DIRS
 # needed. STATIC_ROOT is only the collectstatic target for production.
-STATIC_URL = 'static/'
+#
+# Subpath hosting: set FORCE_SCRIPT_NAME (e.g. "/klokkeninventaris") when the app
+# is served under a path on a shared domain instead of its own subdomain. It
+# prefixes every generated URL (links, static, redirects); the reverse proxy must
+# strip that prefix before gunicorn — the bundled nginx does this. Leave unset for
+# subdomain/root hosting.
+FORCE_SCRIPT_NAME = os.environ.get('FORCE_SCRIPT_NAME') or None
+_URL_PREFIX = (FORCE_SCRIPT_NAME or '').rstrip('/')
+
+STATIC_URL = f'{_URL_PREFIX}/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
-MEDIA_URL = 'media/'
+MEDIA_URL = f'{_URL_PREFIX}/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
+if _URL_PREFIX:
+    # Scope cookies to the subpath so they don't clash with another app on the domain.
+    SESSION_COOKIE_PATH = _URL_PREFIX
+    CSRF_COOKIE_PATH = _URL_PREFIX
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
