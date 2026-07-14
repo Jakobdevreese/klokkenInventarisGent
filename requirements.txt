@@ -1,0 +1,5 @@
+# Python dependencies. Install with: pip install -r requirements.txt
+# GeoDjango also needs system libraries (GDAL, GEOS, PROJ) and a PostgreSQL
+# server with the PostGIS extension -- these are not pip packages.
+Django==5.1.6
+psycopg2-binary==2.9.12

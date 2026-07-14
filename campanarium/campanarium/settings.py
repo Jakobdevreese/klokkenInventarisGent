@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -88,11 +89,23 @@ WSGI_APPLICATION = 'campanarium.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
+#
+# PostgreSQL + PostGIS. Connection details come from environment variables so no
+# credentials are committed. On the server, create the database and enable the
+# PostGIS extension once:
+#   CREATE DATABASE campanarium;
+#   \c campanarium
+#   CREATE EXTENSION postgis;
+# and export DB_NAME / DB_USER / DB_PASSWORD / DB_HOST / DB_PORT (or set defaults).
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.contrib.gis.db.backends.spatialite',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.contrib.gis.db.backends.postgis',
+        'NAME': os.environ.get('DB_NAME', 'campanarium'),
+        'USER': os.environ.get('DB_USER', 'campanarium'),
+        'PASSWORD': os.environ.get('DB_PASSWORD', ''),
+        'HOST': os.environ.get('DB_HOST', 'localhost'),
+        'PORT': os.environ.get('DB_PORT', '5432'),
     }
 }
 
