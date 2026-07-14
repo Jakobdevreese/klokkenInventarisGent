@@ -17,6 +17,10 @@ urlpatterns = [
     path('klokken/', views.bell_view, name='bells'),
     path('klokken/toevoegen/', views.add_bell_view, name='add_bell'),
     path('klokken/<int:pk>/', views.bell_detail_view, name='bell_detail'),
+    # Link an existing gieter/toren/beiaard to this bell (POST from bell_detail).
+    path('klokken/<int:pk>/gieter-koppelen/', views.link_founder_view, name='link_founder'),
+    path('klokken/<int:pk>/toren-koppelen/', views.link_tower_view, name='link_tower'),
+    path('klokken/<int:pk>/beiaard-koppelen/', views.link_carillon_view, name='link_carillon'),
 
     path('beiaarden/', views.carillon_view, name='carillons'),
     path('beiaarden/<int:pk>/', views.carillon_detail_view, name='carillon_detail'),

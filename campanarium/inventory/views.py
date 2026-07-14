@@ -1,11 +1,15 @@
 from django.contrib import messages
+from django.contrib.postgres.search import SearchQuery, SearchRank, SearchVector
 from django.core.paginator import Paginator
+from django.db import IntegrityError, connection
 from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.utils.http import url_has_allowed_host_and_scheme
 
-from .forms import BellForm, FeedbackForm
+from .forms import (
+    BellForm, BellFounderForm, BellTowerForm, CarillonBellForm, FeedbackForm,
+)
 from .models import Bell, Carillon, Founder, Tower
 
 
@@ -59,6 +63,10 @@ def bell_detail_view(request, pk):
         'tower_links': bell.tower_links.select_related('tower'),
         'carillon_links': bell.carillon_links.select_related('carillon', 'carillon__tower'),
         'files': bell.files.all(),
+        # Empty forms for the "link a gieter/toren/beiaard" panels on the page.
+        'founder_form': BellFounderForm(),
+        'tower_form': BellTowerForm(),
+        'carillon_form': CarillonBellForm(),
     }
     return render(request, 'bell_detail.html', context)
 
@@ -77,6 +85,40 @@ def add_bell_view(request):
     else:
         form = BellForm()
     return render(request, 'add_bell.html', {'form': form})
+
+
+def _link_to_bell(request, pk, form_class, label):
+    """Shared handler for the three 'link X to this bell' forms on bell_detail.
+    The bell is fixed from the URL; only the relation's own fields come from the
+    form. Redirects back to the bell with a status message."""
+    bell = get_object_or_404(Bell, pk=pk)
+    if request.method == 'POST':
+        link = form_class._meta.model(bell=bell)
+        form = form_class(request.POST, instance=link)
+        if form.is_valid():
+            if request.user.is_authenticated:
+                link.created_by = request.user
+            try:
+                form.save()
+                messages.success(request, f'{label} gekoppeld.')
+            except IntegrityError:
+                # The junction's UniqueConstraint rejects an identical link.
+                messages.error(request, f'Deze koppeling bestaat al voor deze klok.')
+        else:
+            messages.error(request, f'{label} niet gekoppeld — controleer de invoer.')
+    return redirect('bell_detail', pk=bell.pk)
+
+
+def link_founder_view(request, pk):
+    return _link_to_bell(request, pk, BellFounderForm, 'Gieter')
+
+
+def link_tower_view(request, pk):
+    return _link_to_bell(request, pk, BellTowerForm, 'Toren')
+
+
+def link_carillon_view(request, pk):
+    return _link_to_bell(request, pk, CarillonBellForm, 'Beiaard')
 
 
 # --- Carillons ---------------------------------------------------------------
@@ -146,7 +188,15 @@ def search_view(request):
     page = querystring = None
     if has_criteria:
         results = Bell.objects.all()
-        if query:
+        # Free-text search over the bell's own text. On PostgreSQL this uses the
+        # 'dutch' full-text config (stemming + relevance ranking); on other
+        # backends (the SpatiaLite used in local tests) it falls back to a simple
+        # substring match, so the app stays portable.
+        use_fts = bool(query) and connection.vendor == 'postgresql'
+        if use_fts:
+            vector = SearchVector('name', 'inscription', 'comments', config='dutch')
+            results = results.annotate(rank=SearchRank(vector, SearchQuery(query, config='dutch', search_type='websearch'))).filter(rank__gt=0)
+        elif query:
             results = results.filter(
                 Q(name__icontains=query)
                 | Q(inscription__icontains=query)
@@ -165,8 +215,10 @@ def search_view(request):
                 Q(tower_links__tower__name__icontains=location)
                 | Q(tower_links__tower__city__icontains=location)
             )
-        # distinct() because the relational filters can join multiple rows per bell.
-        page, querystring = _paginate(request, results.distinct().order_by('name'))
+        # distinct() collapses duplicate rows from the relational joins; order by
+        # search relevance when full-text search ran, else alphabetically.
+        results = results.distinct().order_by('-rank' if use_fts else 'name')
+        page, querystring = _paginate(request, results)
 
     context = {
         'query': query, 'function': function,

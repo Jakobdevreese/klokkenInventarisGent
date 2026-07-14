@@ -26,12 +26,11 @@ from django.contrib.contenttypes.models import ContentType
 # Feedback(id, content_object, subject, message, is_resolved) -- in-site tester feedback
 #
 # NOTE ON SEARCH: portable B-tree indexes are declared in each model's Meta for
-# structured filtering (name, year, pitch, weight, ...). The project runs on
-# PostgreSQL, so full-text search over free text (name, inscription, comments and
-# the JSON custom_fields) can be added as a next step via
-# django.contrib.postgres.search.SearchVectorField + GinIndex (and a GIN index on
-# custom_fields). It is not wired up yet because it needs a population strategy
-# (a stored SearchVectorField kept in sync, or SearchVector computed at query time).
+# structured filtering (name, year, pitch, weight, ...). Free-text search is done
+# in search_view() with a query-time PostgreSQL SearchVector ('dutch' config,
+# name/inscription/comments), falling back to icontains on other backends. For
+# larger datasets the next optimisation is a stored SearchVectorField kept in sync
+# plus a GinIndex (Postgres-only, so it needs a vendor-guarded migration).
 
 
 # ---------------------------------------------------------------------------

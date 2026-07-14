@@ -1,0 +1,20 @@
+{# Renders one relation-linking form (fields + submit) shown inside a collapse.
+   Expects: `form`, `action` (target URL) and `submit` (button label). #}
+<form method="post" action="{{ action }}" class="mt-3 pt-3 border-top">
+  {% csrf_token %}
+  {% for field in form %}
+    {% if field.field.widget.input_type == 'checkbox' %}
+    <div class="form-check mb-2">
+      {{ field }}
+      <label class="form-check-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+    </div>
+    {% else %}
+    <div class="mb-2">
+      <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+      {{ field }}
+    </div>
+    {% endif %}
+    {% for e in field.errors %}<div class="text-danger"><small>{{ e }}</small></div>{% endfor %}
+  {% endfor %}
+  <button type="submit" class="btn btn-bronze btn-sm">{{ submit }}</button>
+</form>

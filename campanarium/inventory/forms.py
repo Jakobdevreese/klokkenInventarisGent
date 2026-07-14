@@ -1,6 +1,24 @@
 from django import forms
 
-from .models import Bell, Feedback
+from .models import Bell, Bell_Founder, Bell_Tower, Carillon_Bell, Feedback
+
+
+class BootstrapModelForm(forms.ModelForm):
+    """Applies the right Bootstrap class to each widget (select / checkbox / date
+    / text) and renders date fields as native date pickers."""
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            widget = field.widget
+            if isinstance(widget, forms.CheckboxInput):
+                widget.attrs.setdefault('class', 'form-check-input')
+            elif isinstance(widget, forms.Select):
+                widget.attrs.setdefault('class', 'form-select')
+            else:
+                widget.attrs.setdefault('class', 'form-control')
+            if isinstance(widget, forms.DateInput):
+                widget.input_type = 'date'
 
 
 class BellForm(forms.ModelForm):
@@ -74,3 +92,26 @@ class FeedbackForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.fields['subject'].required = False
         self.fields['message'].required = True  # the one thing we actually need
+
+
+# --- Linking a bell to a gieter / toren / beiaard from the frontend ----------
+# Each form edits one junction row; the `bell` side is set by the view from the
+# URL, so it is not a form field.
+
+class BellFounderForm(BootstrapModelForm):
+    class Meta:
+        model = Bell_Founder
+        fields = ['founder', 'type_of_work', 'date_of_work', 'is_primary_founder']
+
+
+class BellTowerForm(BootstrapModelForm):
+    class Meta:
+        model = Bell_Tower
+        fields = ['tower', 'start_date', 'end_date', 'is_current_location', 'installation_details']
+        widgets = {'installation_details': forms.Textarea(attrs={'rows': 2})}
+
+
+class CarillonBellForm(BootstrapModelForm):
+    class Meta:
+        model = Carillon_Bell
+        fields = ['carillon', 'relative_pitch', 'start_date', 'end_date']

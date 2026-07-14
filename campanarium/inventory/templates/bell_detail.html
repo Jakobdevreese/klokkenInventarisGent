@@ -89,6 +89,14 @@
       {% else %}
       <p class="text-muted-serif mb-0">Nog geen gieter gekoppeld.</p>
       {% endif %}
+      {# Link an existing founder to this bell #}
+      {% url 'link_founder' bell.pk as founder_action %}
+      <button class="btn btn-outline-bronze btn-sm mt-3" type="button" data-bs-toggle="collapse" data-bs-target="#linkFounder">
+        <i class="bi bi-plus-lg"></i> Gieter koppelen
+      </button>
+      <div class="collapse" id="linkFounder">
+        {% include "_linkform.html" with form=founder_form action=founder_action submit="Koppelen" %}
+      </div>
     </div>
 
     <!-- Location history -->
@@ -111,6 +119,14 @@
       {% else %}
       <p class="text-muted-serif mb-0">Nog geen locatie gekoppeld.</p>
       {% endif %}
+      {# Link an existing tower to this bell #}
+      {% url 'link_tower' bell.pk as tower_action %}
+      <button class="btn btn-outline-bronze btn-sm mt-3" type="button" data-bs-toggle="collapse" data-bs-target="#linkTower">
+        <i class="bi bi-plus-lg"></i> Toren koppelen
+      </button>
+      <div class="collapse" id="linkTower">
+        {% include "_linkform.html" with form=tower_form action=tower_action submit="Koppelen" %}
+      </div>
     </div>
 
     <!-- Carillon membership -->
@@ -128,6 +144,14 @@
       {% else %}
       <p class="text-muted-serif mb-0">Deze klok maakt geen deel uit van een beiaard.</p>
       {% endif %}
+      {# Link this bell into an existing carillon #}
+      {% url 'link_carillon' bell.pk as carillon_action %}
+      <button class="btn btn-outline-bronze btn-sm mt-3" type="button" data-bs-toggle="collapse" data-bs-target="#linkCarillon">
+        <i class="bi bi-plus-lg"></i> Beiaard koppelen
+      </button>
+      <div class="collapse" id="linkCarillon">
+        {% include "_linkform.html" with form=carillon_form action=carillon_action submit="Koppelen" %}
+      </div>
     </div>
 
     <!-- Files -->
