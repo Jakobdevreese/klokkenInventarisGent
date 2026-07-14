@@ -1,6 +1,103 @@
 {% extends "base.html" %}
 {% load static %}
+
+{% block hero %}
+<section class="hero">
+  <div class="container">
+    {# Signature: the belfry silhouette ringed by faint "sound" circles (see .hero-mark). #}
+    <span class="hero-mark">
+      <svg class="tower-motif" aria-hidden="true"><use href="#icon-tower"/></svg>
+    </span>
+    <h1>Inventaris van Gentse Klokken &amp; Beiaarden</h1>
+    <svg class="arch-divider" viewBox="0 0 120 22" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+      <path d="M2 20 Q2 8 12 8 Q22 8 22 20 M22 20 Q22 6 34 6 Q46 6 46 20 M60 4 l4 6 4-6 M74 20 Q74 6 86 6 Q98 6 98 20 M98 20 Q98 8 108 8 Q118 8 118 20"/>
+    </svg>
+    <p class="lead">
+      Van Klokke Roeland tot de beiaard van het Belfort: een centrale, gestructureerde
+      en doorzoekbare catalogus van de luidklokken, uurklokken, beiaardklokken en
+      beiaarden van Gent — zowel bewaard als verdwenen.
+    </p>
+    <div class="mt-4 d-flex flex-wrap gap-2 justify-content-center">
+      <a class="btn btn-bronze" href="{% url 'search' %}"><i class="bi bi-search"></i> Doorzoek de inventaris</a>
+      <a class="btn btn-outline-light" href="{% url 'add_bell' %}"><i class="bi bi-plus-lg"></i> Voeg een klok toe</a>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
 {% block content %}
-<h3>Welkom op onze inventaris van Gentse Klokken en Beiaarden!</h3>
-<p>placeholder</p>
+<p class="page-intro mx-auto text-center mb-5">
+  Deze inventaris brengt het klokkenpatrimonium van Gent samen. Klokken, gieters,
+  torens en beiaarden worden apart bijgehouden en met elkaar verbonden, zodat de
+  geschiedenis van elke klok — wie ze goot, waar ze hing en in welke beiaard ze klonk —
+  bewaard blijft.
+</p>
+
+<div class="row g-4 mb-5">
+  <div class="col-6 col-lg-3">
+    <a href="{% url 'bells' %}" class="text-decoration-none">
+      <div class="card-gothic nav-card">
+        <svg class="card-icon" aria-hidden="true"><use href="#icon-bell"/></svg>
+        <div class="count">{{ bell_count }}</div>
+        <div class="card-title">Klokken</div>
+      </div>
+    </a>
+  </div>
+  <div class="col-6 col-lg-3">
+    <a href="{% url 'carillons' %}" class="text-decoration-none">
+      <div class="card-gothic nav-card">
+        <i class="bi bi-music-note-list card-icon"></i>
+        <div class="count">{{ carillon_count }}</div>
+        <div class="card-title">Beiaarden</div>
+      </div>
+    </a>
+  </div>
+  <div class="col-6 col-lg-3">
+    <a href="{% url 'manufacturers' %}" class="text-decoration-none">
+      <div class="card-gothic nav-card">
+        <i class="bi bi-hammer card-icon"></i>
+        <div class="count">{{ founder_count }}</div>
+        <div class="card-title">Gieters</div>
+      </div>
+    </a>
+  </div>
+  <div class="col-6 col-lg-3">
+    <a href="{% url 'towers' %}" class="text-decoration-none">
+      <div class="card-gothic nav-card">
+        <svg class="card-icon" aria-hidden="true"><use href="#icon-tower"/></svg>
+        <div class="count">{{ tower_count }}</div>
+        <div class="card-title">Torens</div>
+      </div>
+    </a>
+  </div>
+</div>
+
+<h2 class="section-title">Recent toegevoegd</h2>
+<hr class="section-rule">
+{% if recent_bells %}
+<div class="row g-3">
+  {% for bell in recent_bells %}
+  <div class="col-md-6 col-lg-4">
+    <a href="{% url 'bell_detail' bell.pk %}" class="text-decoration-none">
+      <div class="card-gothic p-3 d-flex align-items-start gap-3">
+        <svg class="card-icon" aria-hidden="true"><use href="#icon-bell"/></svg>
+        <div>
+          <div class="card-title">{{ bell.name|default:"Naamloze klok" }}</div>
+          <div class="text-muted-serif">
+            {% if bell.year %}{{ bell.year }}{% else %}Jaar onbekend{% endif %}
+            {% if bell.get_function_display %} · {{ bell.get_function_display }}{% endif %}
+          </div>
+        </div>
+      </div>
+    </a>
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+<div class="empty-state">
+  <svg class="card-icon" aria-hidden="true"><use href="#icon-bell"/></svg>
+  <p class="mb-2">Er zijn nog geen klokken in de inventaris.</p>
+  <a class="btn btn-bronze btn-sm" href="{% url 'add_bell' %}">Voeg de eerste klok toe</a>
+</div>
+{% endif %}
 {% endblock %}

@@ -3,27 +3,36 @@ URL configuration for campanarium project.
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/5.1/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from django.conf import settings
+from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path
-from inventory.views import home_view, bell_view, manufacturer_view, tower_view, carillon_view, search_view
+
+from inventory import views
 
 urlpatterns = [
-    path('', home_view, name='home'),
-    path('bells/', bell_view, name='bells'),
-    path('manufacturers/', manufacturer_view, name='manufacturers'),
-    path('towers/', tower_view, name='towers'),
-    path('carillons/', carillon_view, name='carillons'),
-    path('search/', search_view, name='search'),
+    path('', views.home_view, name='home'),
+
+    path('klokken/', views.bell_view, name='bells'),
+    path('klokken/toevoegen/', views.add_bell_view, name='add_bell'),
+    path('klokken/<int:pk>/', views.bell_detail_view, name='bell_detail'),
+
+    path('beiaarden/', views.carillon_view, name='carillons'),
+    path('beiaarden/<int:pk>/', views.carillon_detail_view, name='carillon_detail'),
+
+    path('torens/', views.tower_view, name='towers'),
+    path('torens/<int:pk>/', views.tower_detail_view, name='tower_detail'),
+
+    path('gieters/', views.manufacturer_view, name='manufacturers'),
+    path('gieters/<int:pk>/', views.manufacturer_detail_view, name='manufacturer_detail'),
+
+    path('zoeken/', views.search_view, name='search'),
+    path('feedback/', views.feedback_view, name='feedback'),
+
     path('admin/', admin.site.urls),
 ]
+
+# Serve user-uploaded media during development.
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

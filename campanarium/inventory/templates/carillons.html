@@ -1,6 +1,39 @@
 {% extends "base.html" %}
 {% load static %}
+{% block title %}Beiaarden · Inventaris Gent{% endblock %}
+
 {% block content %}
-<h1>Beiaarden Overzicht</h1>
-<p>placeholder</p>
+<h1 class="section-title">Beiaarden</h1>
+<p class="page-intro">Een beiaard is een samenhangend geheel van bespeelbare klokken, opgehangen in een toren.</p>
+<hr class="section-rule">
+
+{# Card grid, one card per carillon → detail page #}
+{% if page_obj %}
+<div class="row g-3">
+  {% for carillon in page_obj %}
+  <div class="col-md-6 col-lg-4">
+    <a href="{{ carillon.get_absolute_url }}" class="text-decoration-none">
+      <div class="card-gothic p-3 h-100">
+        <div class="d-flex align-items-start gap-3">
+          <i class="bi bi-music-note-list card-icon"></i>
+          <div>
+            <div class="card-title">Beiaard {{ carillon.tower.name }}</div>
+            <div class="text-muted-serif">
+              {% if carillon.established %}Sinds {{ carillon.established }}{% else %}Ingebruikname onbekend{% endif %}
+              {% if carillon.number_of_bells %} · {{ carillon.number_of_bells }} klokken{% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </a>
+  </div>
+  {% endfor %}
+</div>
+{% include "_pagination.html" %}
+{% else %}
+<div class="empty-state">
+  <i class="bi bi-music-note-list card-icon"></i>
+  <p class="mb-0">Er zijn nog geen beiaarden geregistreerd.</p>
+</div>
+{% endif %}
 {% endblock %}

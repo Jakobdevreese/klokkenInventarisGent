@@ -1,0 +1,389 @@
+/* ==========================================================================
+   Inventaris Beiaarden & Klokken Gent — classic / subtly gothic theme
+   Palette: parchment + bronze (bell metal) + charcoal ink.
+   Type: Cinzel (inscriptional caps) for headings, EB Garamond for body.
+   ========================================================================== */
+
+:root {
+  --parchment: #f4f0e6;
+  --parchment-2: #ece5d5;
+  --card: #fbf9f3;
+  --ink: #262019;
+  --ink-soft: #5c5346;
+  --bronze: #7a5230;        /* primary accent — bell bronze */
+  --bronze-dark: #5e3f24;
+  --bronze-light: #a07845;
+  --gold: #b08d57;
+  --verdigris: #3f7d6e;     /* the one differentiating accent — oxidised bell-metal patina */
+  --verdigris-dark: #2f6357;
+  --wine: #6b2d2d;
+  --line: #d8cdb8;
+  --shadow: 0 2px 10px rgba(38, 32, 25, 0.08);
+}
+
+/* Accessibility quality floor: visible keyboard focus + honoured reduced motion. */
+:focus-visible {
+  outline: 2px solid var(--verdigris);
+  outline-offset: 2px;
+}
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after { animation-duration: 0.01ms !important; transition: none !important; }
+  .card-gothic:hover { transform: none; }
+}
+.skip-link {
+  position: absolute; left: -999px; top: 0; z-index: 2000;
+  background: var(--ink); color: #fff; padding: 0.5rem 1rem;
+}
+.skip-link:focus { left: 0; }
+
+/* --- Base ----------------------------------------------------------------- */
+
+body {
+  font-family: 'EB Garamond', Georgia, 'Times New Roman', serif;
+  font-size: 1.075rem;
+  color: var(--ink);
+  background-color: var(--parchment);
+  /* faint parchment vignette */
+  background-image:
+    radial-gradient(1200px 600px at 50% -10%, rgba(176, 141, 87, 0.08), transparent 70%);
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+h1, h2, h3, h4, h5, .display-title {
+  font-family: 'Cinzel', 'EB Garamond', serif;
+  color: var(--ink);
+  letter-spacing: 0.02em;
+}
+
+a {
+  color: var(--bronze);
+  text-decoration: none;
+}
+a:hover { color: var(--bronze-dark); text-decoration: underline; }
+
+.text-bronze { color: var(--bronze) !important; }
+.text-muted-serif { color: var(--ink-soft) !important; }
+
+/* --- Navbar --------------------------------------------------------------- */
+
+.site-navbar {
+  background-color: var(--ink);
+  border-bottom: 3px solid var(--bronze);
+  box-shadow: var(--shadow);
+}
+.site-navbar .navbar-brand {
+  font-family: 'Cinzel', serif;
+  font-weight: 600;
+  color: var(--parchment);
+  letter-spacing: 0.04em;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+.site-navbar .navbar-brand:hover { color: #fff; text-decoration: none; }
+.site-navbar .brand-icon { width: 30px; height: 30px; color: var(--gold); flex: none; }
+.site-navbar .nav-link {
+  color: rgba(244, 240, 230, 0.85) !important;
+  font-family: 'Cinzel', serif;
+  font-size: 0.82rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.4rem 0.85rem !important;
+}
+.site-navbar .nav-link:hover,
+.site-navbar .nav-link.active {
+  color: #fff !important;
+  border-bottom: 2px solid var(--gold);
+}
+.site-navbar .navbar-toggler {
+  border-color: rgba(244, 240, 230, 0.4);
+}
+
+/* --- Buttons -------------------------------------------------------------- */
+
+.btn-bronze {
+  background-color: var(--bronze);
+  border: 1px solid var(--bronze-dark);
+  color: #fff;
+  font-family: 'Cinzel', serif;
+  letter-spacing: 0.05em;
+  font-size: 0.85rem;
+}
+.btn-bronze:hover { background-color: var(--bronze-dark); color: #fff; }
+
+.btn-outline-bronze {
+  border: 1px solid var(--bronze);
+  color: var(--bronze);
+  background: transparent;
+  font-family: 'Cinzel', serif;
+  letter-spacing: 0.04em;
+  font-size: 0.85rem;
+}
+.btn-outline-bronze:hover { background-color: var(--bronze); color: #fff; }
+
+/* --- Hero ----------------------------------------------------------------- */
+
+.hero {
+  background:
+    linear-gradient(rgba(38, 32, 25, 0.72), rgba(38, 32, 25, 0.82));
+  color: var(--parchment);
+  text-align: center;
+  padding: 4rem 1rem 3.5rem;
+  border-bottom: 3px solid var(--bronze);
+}
+.hero h1 {
+  color: #fff;
+  font-size: clamp(1.8rem, 4vw, 3rem);
+  margin-bottom: 0.5rem;
+}
+.hero .lead { color: rgba(244, 240, 230, 0.9); max-width: 720px; margin: 0 auto; }
+.hero .tower-motif { width: 64px; height: 96px; color: var(--gold); margin-bottom: 1rem; }
+
+/* pointed-arch divider */
+.arch-divider {
+  display: block;
+  width: 120px;
+  height: 22px;
+  margin: 1rem auto;
+  color: var(--gold);
+}
+
+/* --- Cards ---------------------------------------------------------------- */
+
+.card-gothic {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-top: 3px solid var(--bronze);
+  border-radius: 2px;
+  box-shadow: var(--shadow);
+  height: 100%;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.card-gothic:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(38, 32, 25, 0.14);
+}
+.card-gothic .card-title {
+  font-family: 'Cinzel', serif;
+  font-size: 1.1rem;
+}
+.card-icon { width: 34px; height: 34px; color: var(--bronze); }
+
+/* nav cards on the home page */
+.nav-card { text-align: center; padding: 1.75rem 1rem; }
+.nav-card .card-icon { width: 44px; height: 44px; margin-bottom: 0.6rem; }
+.nav-card .count { font-family: 'Cinzel', serif; font-size: 1.6rem; color: var(--bronze-dark); }
+
+/* --- Section titles ------------------------------------------------------- */
+
+.section-title {
+  font-size: 1.6rem;
+  margin-bottom: 0.25rem;
+}
+.section-rule {
+  border: none;
+  height: 2px;
+  width: 80px;
+  background: var(--bronze);
+  margin: 0.5rem 0 1.5rem;
+  opacity: 0.7;
+}
+.page-intro { color: var(--ink-soft); max-width: 780px; }
+
+/* --- Tables --------------------------------------------------------------- */
+
+.table-gothic {
+  background: var(--card);
+  border: 1px solid var(--line);
+}
+.table-gothic thead th {
+  font-family: 'Cinzel', serif;
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  background: var(--parchment-2);
+  color: var(--ink);
+  border-bottom: 2px solid var(--bronze) !important;
+}
+.table-gothic td { vertical-align: middle; }
+
+/* --- Badges (functions) --------------------------------------------------- */
+
+.badge-function {
+  font-family: 'Cinzel', serif;
+  font-weight: 500;
+  font-size: 0.7rem;
+  letter-spacing: 0.05em;
+  background: var(--parchment-2);
+  color: var(--bronze-dark);
+  border: 1px solid var(--gold);
+  padding: 0.25em 0.6em;
+}
+
+/* --- Definition lists on detail pages ------------------------------------- */
+
+.detail-dl dt {
+  font-family: 'Cinzel', serif;
+  font-size: 0.78rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+.detail-dl dd { margin-bottom: 0.9rem; font-size: 1.1rem; }
+
+/* --- Info help affordance (popovers / tooltips) --------------------------- */
+
+.info-dot {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.15rem;
+  height: 1.15rem;
+  border-radius: 50%;
+  background: var(--bronze);
+  color: #fff;
+  font-size: 0.72rem;
+  font-family: 'Cinzel', serif;
+  cursor: help;
+  margin-left: 0.35rem;
+  user-select: none;
+}
+.info-dot:hover { background: var(--bronze-dark); }
+
+.popover { border: 1px solid var(--bronze); border-radius: 3px; }
+.popover-header {
+  font-family: 'Cinzel', serif;
+  font-size: 0.85rem;
+  background: var(--parchment-2);
+  color: var(--ink);
+  border-bottom: 1px solid var(--line);
+}
+.popover-body { font-family: 'EB Garamond', serif; color: var(--ink); }
+
+/* --- Guidance / info panel ------------------------------------------------ */
+
+.info-panel {
+  background: var(--parchment-2);
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--bronze);
+  border-radius: 2px;
+  padding: 1.25rem 1.4rem;
+}
+.info-panel h3, .info-panel h4 { font-size: 1.1rem; }
+.info-panel .schema-step { display: flex; gap: 0.6rem; margin-bottom: 0.6rem; }
+.info-panel .schema-step .n {
+  flex: none;
+  width: 1.5rem; height: 1.5rem;
+  background: var(--bronze); color: #fff;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Cinzel', serif; font-size: 0.8rem;
+}
+
+/* --- Forms ---------------------------------------------------------------- */
+
+.form-label {
+  font-family: 'Cinzel', serif;
+  font-size: 0.82rem;
+  letter-spacing: 0.03em;
+  color: var(--ink);
+}
+.form-control, .form-select {
+  border: 1px solid var(--line);
+  background: #fff;
+  border-radius: 2px;
+}
+.form-control:focus, .form-select:focus {
+  border-color: var(--bronze);
+  box-shadow: 0 0 0 0.2rem rgba(122, 82, 48, 0.15);
+}
+.form-text { color: var(--ink-soft); font-style: italic; }
+
+/* --- Empty state ---------------------------------------------------------- */
+
+.empty-state {
+  text-align: center;
+  color: var(--ink-soft);
+  padding: 3rem 1rem;
+  border: 1px dashed var(--line);
+  border-radius: 2px;
+  background: var(--card);
+}
+.empty-state .card-icon { width: 48px; height: 48px; opacity: 0.5; margin-bottom: 0.75rem; }
+
+/* --- Footer --------------------------------------------------------------- */
+
+.site-footer {
+  margin-top: auto;
+  background: var(--ink);
+  color: rgba(244, 240, 230, 0.75);
+  border-top: 3px solid var(--bronze);
+  padding: 2rem 1rem 1.5rem;
+  font-size: 0.95rem;
+}
+.site-footer a { color: var(--gold); }
+.site-footer .tower-mark { width: 26px; height: 40px; color: var(--gold); opacity: 0.8; }
+
+/* --- Content wrapper ------------------------------------------------------ */
+
+.content-wrap { flex: 1 0 auto; padding-top: 2rem; padding-bottom: 3rem; }
+
+/* --- Pagination ----------------------------------------------------------- */
+
+.pagination .page-link {
+  color: var(--bronze);
+  border-color: var(--line);
+  background: var(--card);
+  font-family: 'Cinzel', serif;
+  font-size: 0.85rem;
+}
+.pagination .page-link:hover { background: var(--parchment-2); color: var(--bronze-dark); }
+.pagination .page-item.disabled .page-link { color: var(--ink-soft); background: var(--parchment); }
+
+/* --- Hero sound-rings (signature) ----------------------------------------
+   Faint concentric rings behind the bell suggest a struck, ringing bell —
+   the subject itself. Kept low-contrast so it never competes with the title. */
+.hero-mark { position: relative; display: inline-flex; margin-bottom: 1rem; }
+.hero-mark .tower-motif { position: relative; z-index: 1; margin-bottom: 0; }
+.hero-mark::before,
+.hero-mark::after {
+  content: "";
+  position: absolute;
+  top: 50%; left: 50%;
+  border: 1px solid rgba(176, 141, 87, 0.35);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+}
+.hero-mark::before { width: 120px; height: 120px; }
+.hero-mark::after { width: 175px; height: 175px; border-color: rgba(176, 141, 87, 0.2); }
+
+/* --- Feedback widget (beta testing) --------------------------------------
+   One fixed, verdigris affordance on every page — the single differentiating
+   accent, used once. */
+.feedback-fab {
+  position: fixed;
+  right: 1.25rem; bottom: 1.25rem;
+  z-index: 1030;
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  background: var(--verdigris);
+  color: #fff;
+  border: none;
+  border-radius: 999px;
+  padding: 0.6rem 1.1rem;
+  font-family: 'Cinzel', serif;
+  font-size: 0.8rem; letter-spacing: 0.04em;
+  box-shadow: 0 4px 14px rgba(38, 32, 25, 0.25);
+}
+.feedback-fab:hover { background: var(--verdigris-dark); color: #fff; }
+.feedback-fab .label { display: none; }
+@media (min-width: 576px) { .feedback-fab .label { display: inline; } }
+
+.modal-gothic .modal-content {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-top: 3px solid var(--verdigris);
+  border-radius: 3px;
+}
+.modal-gothic .modal-title { font-family: 'Cinzel', serif; font-size: 1.1rem; }

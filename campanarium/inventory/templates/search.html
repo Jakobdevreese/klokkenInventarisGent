@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Zoeken · Inventaris Gent{% endblock %}
+
+{% block content %}
+<h1 class="section-title">Klokken zoeken</h1>
+<p class="page-intro">
+  Combineer criteria om klokken terug te vinden. Beweeg met de muis over (of tab naar)
+  de <span class="info-dot">i</span>-tekens voor uitleg bij elk zoekveld en hoe het
+  in de databank verbonden is.
+</p>
+<hr class="section-rule">
+
+<div class="row g-4">
+  {# --- Filter form. Each info-dot is a hover/focus popover explaining the field. --- #}
+  <div class="col-lg-4">
+    <div class="card-gothic p-4">
+      <form method="GET">
+        <div class="mb-3">
+          <label class="form-label" for="q">Trefwoord
+            <span class="info-dot" tabindex="0" role="button" aria-label="Uitleg trefwoord"
+                  data-bs-toggle="popover" data-bs-title="Trefwoord"
+                  data-bs-content="Zoekt in de <strong>naam</strong>, de <strong>inscriptie</strong> en de <strong>opmerkingen</strong> van de klok.">i</span>
+          </label>
+          <input type="search" class="form-control" id="q" name="q" value="{{ query }}" placeholder="naam, inscriptie …">
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="function">Functie
+            <span class="info-dot" tabindex="0" role="button" aria-label="Uitleg functie"
+                  data-bs-toggle="popover" data-bs-title="Functie"
+                  data-bs-content="Filtert op het <strong>type klok</strong>: luidklok, uurklok, beiaardklok, gelui of andere.">i</span>
+          </label>
+          <select class="form-select" id="function" name="function">
+            <option value="">Alle functies</option>
+            {% for value, label in function_choices %}
+            <option value="{{ value }}" {% if value == function %}selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Gietjaar
+            <span class="info-dot" tabindex="0" role="button" aria-label="Uitleg gietjaar"
+                  data-bs-toggle="popover" data-bs-title="Gietjaar"
+                  data-bs-content="Beperk op het <strong>gietjaar</strong>. Vul een beginjaar en/of een eindjaar in.">i</span>
+          </label>
+          <div class="row g-2">
+            <div class="col-6"><input type="number" class="form-control" name="year_from" value="{{ year_from }}" placeholder="van" min="600" max="2100"></div>
+            <div class="col-6"><input type="number" class="form-control" name="year_to" value="{{ year_to }}" placeholder="tot" min="600" max="2100"></div>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="founder">Gieter
+            <span class="info-dot" tabindex="0" role="button" aria-label="Uitleg gieter"
+                  data-bs-toggle="popover" data-bs-title="Gieter (relatie)"
+                  data-bs-content="Zoekt klokken via hun gekoppelde <strong>gieter</strong>. Gebruikt de relatie Klok–Gieter uit de genormaliseerde databank.">i</span>
+          </label>
+          <input type="text" class="form-control" id="founder" name="founder" value="{{ founder }}" placeholder="naam van de gieter">
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="location">Locatie
+            <span class="info-dot" tabindex="0" role="button" aria-label="Uitleg locatie"
+                  data-bs-toggle="popover" data-bs-title="Locatie (relatie)"
+                  data-bs-content="Zoekt klokken via de <strong>toren</strong> waarin ze hangen of hingen — op torennaam of stad. Gebruikt de relatie Klok–Toren.">i</span>
+          </label>
+          <input type="text" class="form-control" id="location" name="location" value="{{ location }}" placeholder="toren of stad">
+        </div>
+
+        <div class="d-flex gap-2">
+          <button type="submit" class="btn btn-bronze"><i class="bi bi-search"></i> Zoeken</button>
+          <a class="btn btn-outline-bronze" href="{% url 'search' %}">Wissen</a>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  {# --- Results: table when there are hits, empty state when not, guidance before searching. --- #}
+  <div class="col-lg-8">
+    {% if has_criteria %}
+      {% if page_obj %}
+      <h2 class="card-title mb-3">{{ page_obj.paginator.count }} resulta{{ page_obj.paginator.count|pluralize:"at,ten" }}</h2>
+      <div class="table-responsive">
+        <table class="table table-gothic table-hover align-middle mb-0">
+          <thead><tr><th>Naam</th><th>Gietjaar</th><th>Functie</th><th>Slagtoon</th></tr></thead>
+          <tbody>
+            {% for bell in page_obj %}
+            <tr onclick="window.location='{{ bell.get_absolute_url }}'" style="cursor:pointer">
+              <td><strong>{{ bell.name|default:"Naamloze klok" }}</strong></td>
+              <td>{{ bell.year|default:"—" }}</td>
+              <td>{% if bell.function %}<span class="badge-function">{{ bell.get_function_display }}</span>{% else %}—{% endif %}</td>
+              <td>{{ bell.pitch|default:"—" }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% include "_pagination.html" %}
+      {% else %}
+      <div class="empty-state">
+        <svg class="card-icon" aria-hidden="true"><use href="#icon-bell"/></svg>
+        <p class="mb-0">Geen klokken gevonden voor deze zoekcriteria.</p>
+        <p class="mb-0"><small>Probeer minder of ruimere criteria.</small></p>
+      </div>
+      {% endif %}
+    {% else %}
+      <div class="info-panel">
+        <h3><i class="bi bi-search text-bronze"></i> Zo werkt het zoeken</h3>
+        <p>Vul links één of meer velden in. De criteria worden gecombineerd (EN):
+          hoe meer je invult, hoe gerichter het resultaat.</p>
+        <ul class="mb-0">
+          <li><strong>Trefwoord</strong> doorzoekt de tekstvelden van de klok zelf.</li>
+          <li><strong>Gieter</strong> en <strong>Locatie</strong> zoeken via de relaties naar
+            respectievelijk de gieter en de toren — een sterkte van de genormaliseerde opzet.</li>
+          <li>Elk resultaat linkt door naar de volledige klokfiche.</li>
+        </ul>
+      </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

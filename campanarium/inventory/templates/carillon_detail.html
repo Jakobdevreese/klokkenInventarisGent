@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Beiaard {{ carillon.tower.name }} · Inventaris Gent{% endblock %}
+
+{% block content %}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url 'carillons' %}">Beiaarden</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Beiaard {{ carillon.tower.name }}</li>
+  </ol>
+</nav>
+
+<h1 class="section-title"><i class="bi bi-music-note-list text-bronze"></i> Beiaard {{ carillon.tower.name }}</h1>
+<hr class="section-rule">
+
+<div class="row g-4">
+  <div class="col-lg-5">
+    <div class="card-gothic p-4">
+      <h2 class="card-title mb-3">Gegevens</h2>
+      <dl class="row detail-dl mb-0">
+        <dt class="col-sm-5">Toren</dt><dd class="col-sm-7"><a href="{% url 'tower_detail' carillon.tower.pk %}">{{ carillon.tower.name }}</a></dd>
+        <dt class="col-sm-5">Ingebruikname</dt><dd class="col-sm-7">{{ carillon.established|default:"—" }}</dd>
+        <dt class="col-sm-5">Aantal klokken</dt><dd class="col-sm-7">{{ carillon.number_of_bells|default:"—" }}</dd>
+        <dt class="col-sm-5">Totaal gewicht</dt><dd class="col-sm-7">{% if carillon.total_weight %}{{ carillon.total_weight|floatformat:"-2" }} kg{% else %}—{% endif %}</dd>
+        <dt class="col-sm-5">Transpositie</dt><dd class="col-sm-7">{{ carillon.transposition|default:"—" }}</dd>
+        <dt class="col-sm-5">Toetsenbord</dt><dd class="col-sm-7">{{ carillon.keyboard_standard|default:"—" }}</dd>
+      </dl>
+      {% if carillon.comments %}<p class="mt-3 mb-0">{{ carillon.comments|linebreaksbr }}</p>{% endif %}
+    </div>
+  </div>
+
+  <div class="col-lg-7">
+    <div class="card-gothic p-4">
+      <h2 class="card-title mb-3">Klokken in deze beiaard</h2>
+      {% if bell_links %}
+      <table class="table table-gothic table-sm table-hover mb-0">
+        <thead><tr><th>Klok</th><th>Relatieve toon</th><th>Gietjaar</th></tr></thead>
+        <tbody>
+          {% for link in bell_links %}
+          <tr onclick="window.location='{% url 'bell_detail' link.bell.pk %}'" style="cursor:pointer">
+            <td>{{ link.bell.name|default:"Naamloze klok" }}</td>
+            <td>{{ link.relative_pitch|default:"—" }}</td>
+            <td>{{ link.bell.year|default:"—" }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% else %}
+      <p class="text-muted-serif mb-0">Nog geen klokken gekoppeld aan deze beiaard.</p>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

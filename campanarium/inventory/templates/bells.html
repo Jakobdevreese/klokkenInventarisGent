@@ -1,6 +1,65 @@
 {% extends "base.html" %}
 {% load static %}
+{% block title %}Klokken · Inventaris Gent{% endblock %}
+
 {% block content %}
-<h1>Klokken overzicht</h1>
-<p>placeholder</p>
+{# Page heading + add-bell shortcut #}
+<div class="d-flex flex-wrap justify-content-between align-items-end mb-2 gap-2">
+  <div>
+    <h1 class="section-title mb-0">Klokken</h1>
+    <p class="page-intro mb-0">Alle geïnventariseerde klokken. Klik een klok aan voor de volledige gegevens.</p>
+  </div>
+  <a class="btn btn-bronze btn-sm" href="{% url 'add_bell' %}"><i class="bi bi-plus-lg"></i> Klok toevoegen</a>
+</div>
+<hr class="section-rule">
+
+{# Filter by function; submits on change. The selected value round-trips via the querystring. #}
+<form method="GET" class="row g-2 align-items-end mb-4">
+  <div class="col-sm-6 col-md-4">
+    <label class="form-label" for="function">Filter op functie</label>
+    <select class="form-select" id="function" name="function" onchange="this.form.submit()">
+      <option value="">Alle functies</option>
+      {% for value, label in function_choices %}
+      <option value="{{ value }}" {% if value == selected_function %}selected{% endif %}>{{ label }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  {% if selected_function %}
+  <div class="col-auto"><a class="btn btn-outline-bronze btn-sm" href="{% url 'bells' %}">Filter wissen</a></div>
+  {% endif %}
+</form>
+
+{# Results table (whole row is a link to the bell) + empty state #}
+{% if page_obj %}
+<div class="table-responsive">
+  <table class="table table-gothic table-hover align-middle mb-0">
+    <thead>
+      <tr>
+        <th>Naam</th><th>Gietjaar</th><th>Functie</th><th>Slagtoon</th>
+        <th class="text-end">Gewicht</th><th class="text-end">Diameter</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for bell in page_obj %}
+      <tr onclick="window.location='{{ bell.get_absolute_url }}'" style="cursor:pointer">
+        <td><strong>{{ bell.name|default:"Naamloze klok" }}</strong></td>
+        <td>{{ bell.year|default:"—" }}</td>
+        <td>{% if bell.function %}<span class="badge-function">{{ bell.get_function_display }}</span>{% else %}—{% endif %}</td>
+        <td>{{ bell.pitch|default:"—" }}</td>
+        <td class="text-end">{% if bell.weight %}{{ bell.weight|floatformat:"-2" }} kg{% else %}—{% endif %}</td>
+        <td class="text-end">{% if bell.diameter %}{{ bell.diameter|floatformat:"-2" }} cm{% else %}—{% endif %}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+<p class="text-muted-serif mt-2"><small>{{ page_obj.paginator.count }} klok{{ page_obj.paginator.count|pluralize:"ken" }}.</small></p>
+{% include "_pagination.html" %}
+{% else %}
+<div class="empty-state">
+  <svg class="card-icon" aria-hidden="true"><use href="#icon-bell"/></svg>
+  <p class="mb-2">Geen klokken gevonden{% if selected_function %} voor deze functie{% endif %}.</p>
+  <a class="btn btn-bronze btn-sm" href="{% url 'add_bell' %}">Voeg een klok toe</a>
+</div>
+{% endif %}
 {% endblock %}

@@ -1,6 +1,37 @@
 {% extends "base.html" %}
 {% load static %}
+{% block title %}Gieters · Inventaris Gent{% endblock %}
+
 {% block content %}
-<h1>Klokkengieters overzicht</h1>
-<p>placeholder</p>
+<h1 class="section-title">Klokkengieters</h1>
+<p class="page-intro">De gieters en gieterijen die de Gentse klokken vervaardigden of herstelden.</p>
+<hr class="section-rule">
+
+{# Table, whole row links to the founder detail page #}
+{% if page_obj %}
+<div class="table-responsive">
+  <table class="table table-gothic table-hover align-middle mb-0">
+    <thead>
+      <tr><th>Naam</th><th>Bedrijf</th><th>Actief</th><th>Regio</th><th>Land</th></tr>
+    </thead>
+    <tbody>
+      {% for founder in page_obj %}
+      <tr onclick="window.location='{{ founder.get_absolute_url }}'" style="cursor:pointer">
+        <td><strong>{{ founder.primary_name|default:"Onbekend" }}</strong></td>
+        <td>{{ founder.company_name|default:"—" }}</td>
+        <td>{{ founder.active_period|default:"—" }}</td>
+        <td>{{ founder.geographic_location|default:"—" }}</td>
+        <td>{{ founder.country|default:"—" }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% include "_pagination.html" %}
+{% else %}
+<div class="empty-state">
+  <i class="bi bi-hammer card-icon"></i>
+  <p class="mb-0">Er zijn nog geen gieters geregistreerd.</p>
+</div>
+{% endif %}
 {% endblock %}

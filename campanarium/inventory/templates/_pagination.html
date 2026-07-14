@@ -1,0 +1,21 @@
+{# Reusable pager. Expects `page_obj` (a Paginator page) and `querystring`
+   (the current GET params minus `page`, so active filters survive paging). #}
+{% if page_obj.paginator.num_pages > 1 %}
+<nav aria-label="Paginering" class="mt-4">
+  <ul class="pagination justify-content-center mb-0">
+    {% if page_obj.has_previous %}
+    <li class="page-item"><a class="page-link" href="?{% if querystring %}{{ querystring }}&amp;{% endif %}page={{ page_obj.previous_page_number }}">Vorige</a></li>
+    {% else %}
+    <li class="page-item disabled"><span class="page-link">Vorige</span></li>
+    {% endif %}
+
+    <li class="page-item disabled"><span class="page-link">Pagina {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span></li>
+
+    {% if page_obj.has_next %}
+    <li class="page-item"><a class="page-link" href="?{% if querystring %}{{ querystring }}&amp;{% endif %}page={{ page_obj.next_page_number }}">Volgende</a></li>
+    {% else %}
+    <li class="page-item disabled"><span class="page-link">Volgende</span></li>
+    {% endif %}
+  </ul>
+</nav>
+{% endif %}

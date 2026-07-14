@@ -1,0 +1,152 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}{{ bell.name|default:"Klok" }} · Inventaris Gent{% endblock %}
+
+{% block content %}
+{# Full bell fiche: own data + acoustic partials, and its links to gieters, torens and beiaarden. #}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url 'bells' %}">Klokken</a></li>
+    <li class="breadcrumb-item active" aria-current="page">{{ bell.name|default:"Naamloze klok" }}</li>
+  </ol>
+</nav>
+
+<div class="d-flex align-items-center gap-3 mb-1">
+  <svg class="card-icon" style="width:40px;height:40px" aria-hidden="true"><use href="#icon-bell"/></svg>
+  <h1 class="section-title mb-0">{{ bell.name|default:"Naamloze klok" }}</h1>
+  {% if bell.function %}<span class="badge-function">{{ bell.get_function_display }}</span>{% endif %}
+</div>
+<hr class="section-rule">
+
+<div class="row g-4">
+  <div class="col-lg-7">
+    <div class="card-gothic p-4">
+      <h2 class="card-title mb-3">Gegevens</h2>
+      <dl class="row detail-dl mb-0">
+        <dt class="col-sm-4">Gietjaar</dt><dd class="col-sm-8">{{ bell.year|default:"Onbekend" }}</dd>
+        <dt class="col-sm-4">Slagtoon</dt><dd class="col-sm-8">{{ bell.pitch|default:"—" }}</dd>
+        <dt class="col-sm-4">Gewicht</dt><dd class="col-sm-8">{% if bell.weight %}{{ bell.weight|floatformat:"-2" }} kg{% else %}—{% endif %}</dd>
+        <dt class="col-sm-4">Hoogte</dt><dd class="col-sm-8">{% if bell.height %}{{ bell.height|floatformat:"-2" }} cm{% else %}—{% endif %}</dd>
+        <dt class="col-sm-4">Diameter</dt><dd class="col-sm-8">{% if bell.diameter %}{{ bell.diameter|floatformat:"-2" }} cm{% else %}—{% endif %}</dd>
+        <dt class="col-sm-4">Profiel</dt><dd class="col-sm-8">{{ bell.profile|default:"—" }}</dd>
+        <dt class="col-sm-4">Opstelling</dt><dd class="col-sm-8">{{ bell.installation|default:"—" }}</dd>
+        <dt class="col-sm-4">Inscriptie</dt><dd class="col-sm-8">{% if bell.inscription %}<em>“{{ bell.inscription }}”</em>{% else %}—{% endif %}</dd>
+        <dt class="col-sm-4">Versieringen</dt><dd class="col-sm-8">{{ bell.ornaments|default:"—"|linebreaksbr }}</dd>
+      </dl>
+      {% if bell.comments %}
+      <h3 class="card-title mt-3 mb-2" style="font-size:1rem">Opmerkingen</h3>
+      <p class="mb-0">{{ bell.comments|linebreaksbr }}</p>
+      {% endif %}
+      {% if bell.custom_fields %}
+      <h3 class="card-title mt-3 mb-2" style="font-size:1rem">Extra velden</h3>
+      <dl class="row detail-dl mb-0">
+        {% for key, value in bell.custom_fields.items %}
+        <dt class="col-sm-4">{{ key }}</dt><dd class="col-sm-8">{{ value }}</dd>
+        {% endfor %}
+      </dl>
+      {% endif %}
+    </div>
+
+    <!-- Acoustic partials -->
+    <div class="card-gothic p-4 mt-4">
+      <h2 class="card-title mb-3">Boventonen <small class="text-muted-serif">(campanometrie)</small></h2>
+      {% if partials %}
+      <table class="table table-gothic table-sm mb-0">
+        <thead><tr><th>Boventoon</th><th class="text-end">Frequentie</th><th>Noot</th><th class="text-end">Afwijking</th></tr></thead>
+        <tbody>
+          {% for p in partials %}
+          <tr>
+            <td>{{ p.get_partial_display }}</td>
+            <td class="text-end">{% if p.frequency %}{{ p.frequency|floatformat:"-2" }} Hz{% else %}—{% endif %}</td>
+            <td>{{ p.note|default:"—" }}</td>
+            <td class="text-end">{% if p.cents_deviation != None %}{{ p.cents_deviation|floatformat:"-1" }} ct{% else %}—{% endif %}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% else %}
+      <p class="text-muted-serif mb-0">Nog geen boventonen geregistreerd.</p>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="col-lg-5">
+    <!-- Founders -->
+    <div class="card-gothic p-4">
+      <h2 class="card-title mb-3"><i class="bi bi-hammer text-bronze"></i> Gieters</h2>
+      {% if founder_links %}
+      <ul class="list-unstyled mb-0">
+        {% for link in founder_links %}
+        <li class="mb-2 pb-2 border-bottom">
+          <a href="{% url 'manufacturer_detail' link.founder.pk %}">{{ link.founder.primary_name|default:"Onbekende gieter" }}</a>
+          {% if link.is_primary_founder %}<span class="badge-function ms-1">Primair</span>{% endif %}
+          <div class="text-muted-serif"><small>
+            {{ link.type_of_work|default:"werk" }}{% if link.date_of_work %} · {{ link.date_of_work }}{% endif %}
+          </small></div>
+        </li>
+        {% endfor %}
+      </ul>
+      {% else %}
+      <p class="text-muted-serif mb-0">Nog geen gieter gekoppeld.</p>
+      {% endif %}
+    </div>
+
+    <!-- Location history -->
+    <div class="card-gothic p-4 mt-4">
+      <h2 class="card-title mb-3"><svg class="card-icon" style="width:20px;height:20px" aria-hidden="true"><use href="#icon-tower"/></svg> Locaties</h2>
+      {% if tower_links %}
+      <ul class="list-unstyled mb-0">
+        {% for link in tower_links %}
+        <li class="mb-2 pb-2 border-bottom">
+          <a href="{% url 'tower_detail' link.tower.pk %}">{{ link.tower.name|default:"Onbekende toren" }}</a>
+          {% if link.is_current_location %}<span class="badge-function ms-1">Huidige locatie</span>{% endif %}
+          <div class="text-muted-serif"><small>
+            {% if link.start_date %}van {{ link.start_date|date:"Y" }}{% endif %}
+            {% if link.end_date %} tot {{ link.end_date|date:"Y" }}{% endif %}
+            {% if not link.start_date and not link.end_date %}periode onbekend{% endif %}
+          </small></div>
+        </li>
+        {% endfor %}
+      </ul>
+      {% else %}
+      <p class="text-muted-serif mb-0">Nog geen locatie gekoppeld.</p>
+      {% endif %}
+    </div>
+
+    <!-- Carillon membership -->
+    <div class="card-gothic p-4 mt-4">
+      <h2 class="card-title mb-3"><i class="bi bi-music-note-list text-bronze"></i> Beiaarden</h2>
+      {% if carillon_links %}
+      <ul class="list-unstyled mb-0">
+        {% for link in carillon_links %}
+        <li class="mb-2 pb-2 border-bottom">
+          <a href="{% url 'carillon_detail' link.carillon.pk %}">Beiaard {{ link.carillon.tower.name }}</a>
+          {% if link.relative_pitch %}<span class="text-muted-serif"> · {{ link.relative_pitch }}</span>{% endif %}
+        </li>
+        {% endfor %}
+      </ul>
+      {% else %}
+      <p class="text-muted-serif mb-0">Deze klok maakt geen deel uit van een beiaard.</p>
+      {% endif %}
+    </div>
+
+    <!-- Files -->
+    {% if files %}
+    <div class="card-gothic p-4 mt-4">
+      <h2 class="card-title mb-3"><i class="bi bi-paperclip text-bronze"></i> Bestanden</h2>
+      <ul class="list-unstyled mb-0">
+        {% for f in files %}
+        <li class="mb-1"><a href="{{ f.file.url }}" target="_blank" rel="noopener">
+          <i class="bi bi-file-earmark"></i> {{ f.name }} <small class="text-muted-serif">({{ f.get_file_type_display }})</small>
+        </a></li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+<p class="text-muted-serif mt-4"><small>
+  Toegevoegd op {{ bell.created_at|date:"j F Y" }}{% if bell.created_by %} door {{ bell.created_by }}{% endif %}.
+</small></p>
+{% endblock %}

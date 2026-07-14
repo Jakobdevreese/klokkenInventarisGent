@@ -1,6 +1,39 @@
 {% extends "base.html" %}
 {% load static %}
+{% block title %}Torens · Inventaris Gent{% endblock %}
+
 {% block content %}
-<h1>Torens overzicht</h1>
-<p>placeholder</p>
+<h1 class="section-title">Torens</h1>
+<p class="page-intro">De torens en gebouwen waarin de Gentse klokken hangen of hingen.</p>
+<hr class="section-rule">
+
+{# Card grid, one card per tower → detail page #}
+{% if page_obj %}
+<div class="row g-3">
+  {% for tower in page_obj %}
+  <div class="col-md-6 col-lg-4">
+    <a href="{{ tower.get_absolute_url }}" class="text-decoration-none">
+      <div class="card-gothic p-3 h-100">
+        <div class="d-flex align-items-start gap-3">
+          <svg class="card-icon" aria-hidden="true"><use href="#icon-tower"/></svg>
+          <div>
+            <div class="card-title">{{ tower.name|default:"Naamloze toren" }}</div>
+            <div class="text-muted-serif">
+              {% if tower.building %}{{ tower.building }}{% endif %}
+              {% if tower.city %}<br>{{ tower.city }}{% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </a>
+  </div>
+  {% endfor %}
+</div>
+{% include "_pagination.html" %}
+{% else %}
+<div class="empty-state">
+  <svg class="card-icon" aria-hidden="true"><use href="#icon-tower"/></svg>
+  <p class="mb-0">Er zijn nog geen torens geregistreerd.</p>
+</div>
+{% endif %}
 {% endblock %}

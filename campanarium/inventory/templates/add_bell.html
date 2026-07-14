@@ -1,0 +1,207 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Klok toevoegen · Inventaris Gent{% endblock %}
+
+{% block content %}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url 'bells' %}">Klokken</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Toevoegen</li>
+  </ol>
+</nav>
+
+<h1 class="section-title">Een klok toevoegen</h1>
+<p class="page-intro">
+  Vul hier de eigenschappen van de klok zélf in. De koppelingen aan een gieter,
+  toren of beiaard leg je nadien — lees rechts hoe de inventaris is opgebouwd.
+</p>
+<hr class="section-rule">
+
+<div class="row g-4">
+  <!-- Form -->
+  <div class="col-lg-7">
+    <form method="POST" novalidate>
+      {% csrf_token %}
+
+      {% if form.non_field_errors %}
+      <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+      {% endif %}
+
+      <div class="card-gothic p-4 mb-4">
+        <h2 class="card-title mb-3">Identificatie</h2>
+        <div class="row g-3">
+          <div class="col-md-7">
+            <label class="form-label" for="{{ form.name.id_for_label }}">{{ form.name.label }}</label>
+            {{ form.name }}
+            <div class="form-text">{{ form.name.help_text }}</div>
+            {% for e in form.name.errors %}<div class="text-danger"><small>{{ e }}</small></div>{% endfor %}
+          </div>
+          <div class="col-md-5">
+            <label class="form-label" for="{{ form.function.id_for_label }}">{{ form.function.label }}
+              <span class="info-dot" tabindex="0" role="button" data-bs-toggle="popover" data-bs-title="Functie"
+                    data-bs-content="Bepaalt het type klok. Een <em>beiaardklok</em> hoort bij een beiaard; een <em>luidklok</em> of <em>uurklok</em> hangt los in een toren. Zo kan de inventaris later per type filteren.">i</span>
+            </label>
+            {{ form.function }}
+            <div class="form-text">{{ form.function.help_text }}</div>
+            {% for e in form.function.errors %}<div class="text-danger"><small>{{ e }}</small></div>{% endfor %}
+          </div>
+        </div>
+      </div>
+
+      <div class="card-gothic p-4 mb-4">
+        <h2 class="card-title mb-3">Datering &amp; klank</h2>
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label class="form-label" for="{{ form.year.id_for_label }}">{{ form.year.label }}</label>
+            {{ form.year }}
+            <div class="form-text">{{ form.year.help_text }}</div>
+            {% for e in form.year.errors %}<div class="text-danger"><small>{{ e }}</small></div>{% endfor %}
+          </div>
+          <div class="col-md-6">
+            <label class="form-label" for="{{ form.pitch.id_for_label }}">{{ form.pitch.label }}
+              <span class="info-dot" tabindex="0" role="button" data-bs-toggle="popover" data-bs-title="Slagtoon"
+                    data-bs-content="De hoofdtoon van de klok. De afzonderlijke <em>boventonen</em> (zoemtoon, terts, kwint, nominaal …) horen niet hier, maar worden per klok apart bijgehouden.">i</span>
+            </label>
+            {{ form.pitch }}
+            <div class="form-text">{{ form.pitch.help_text }}</div>
+            {% for e in form.pitch.errors %}<div class="text-danger"><small>{{ e }}</small></div>{% endfor %}
+          </div>
+        </div>
+      </div>
+
+      <div class="card-gothic p-4 mb-4">
+        <h2 class="card-title mb-3">Afmetingen</h2>
+        <div class="row g-3">
+          <div class="col-md-4">
+            <label class="form-label" for="{{ form.weight.id_for_label }}">{{ form.weight.label }}</label>
+            {{ form.weight }}
+            {% for e in form.weight.errors %}<div class="text-danger"><small>{{ e }}</small></div>{% endfor %}
+          </div>
+          <div class="col-md-4">
+            <label class="form-label" for="{{ form.height.id_for_label }}">{{ form.height.label }}</label>
+            {{ form.height }}
+            {% for e in form.height.errors %}<div class="text-danger"><small>{{ e }}</small></div>{% endfor %}
+          </div>
+          <div class="col-md-4">
+            <label class="form-label" for="{{ form.diameter.id_for_label }}">{{ form.diameter.label }}
+              <span class="info-dot" tabindex="0" role="button" data-bs-toggle="popover" data-bs-title="Diameter"
+                    data-bs-content="De onderdiameter is de belangrijkste maat: ze bepaalt in grote mate de toon van de klok.">i</span>
+            </label>
+            {{ form.diameter }}
+            {% for e in form.diameter.errors %}<div class="text-danger"><small>{{ e }}</small></div>{% endfor %}
+          </div>
+        </div>
+      </div>
+
+      <div class="card-gothic p-4 mb-4">
+        <h2 class="card-title mb-3">Beschrijving</h2>
+        <div class="row g-3">
+          <div class="col-12">
+            <label class="form-label" for="{{ form.inscription.id_for_label }}">{{ form.inscription.label }}</label>
+            {{ form.inscription }}
+            <div class="form-text">{{ form.inscription.help_text }}</div>
+            {% for e in form.inscription.errors %}<div class="text-danger"><small>{{ e }}</small></div>{% endfor %}
+          </div>
+          <div class="col-12">
+            <label class="form-label" for="{{ form.ornaments.id_for_label }}">{{ form.ornaments.label }}</label>
+            {{ form.ornaments }}
+            <div class="form-text">{{ form.ornaments.help_text }}</div>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label" for="{{ form.profile.id_for_label }}">{{ form.profile.label }}</label>
+            {{ form.profile }}
+            <div class="form-text">{{ form.profile.help_text }}</div>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label" for="{{ form.installation.id_for_label }}">{{ form.installation.label }}</label>
+            {{ form.installation }}
+            <div class="form-text">{{ form.installation.help_text }}</div>
+          </div>
+          <div class="col-12">
+            <label class="form-label" for="{{ form.comments.id_for_label }}">{{ form.comments.label }}</label>
+            {{ form.comments }}
+            <div class="form-text">{{ form.comments.help_text }}</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="d-flex gap-2">
+        <button type="submit" class="btn btn-bronze"><i class="bi bi-check-lg"></i> Klok opslaan</button>
+        <a class="btn btn-outline-bronze" href="{% url 'bells' %}">Annuleren</a>
+      </div>
+    </form>
+  </div>
+
+  <!-- Guidance -->
+  <div class="col-lg-5">
+    <div class="info-panel mb-4">
+      <h3><i class="bi bi-diagram-3 text-bronze"></i> Hoe is de inventaris opgebouwd?</h3>
+      <p class="mb-3">
+        De databank is <strong>genormaliseerd</strong>: elk gegeven wordt maar één keer
+        opgeslagen en hergebruikt. Er zijn vier hoofdentiteiten die je met elkaar verbindt.
+      </p>
+      <div class="schema-step"><span class="n">1</span><div><strong>Klok</strong> — het middelpunt. Enkel de eigenschappen van de klok zelf (dit formulier).</div></div>
+      <div class="schema-step"><span class="n">2</span><div><strong>Gieter</strong> — wie de klok goot of herstelde, als aparte fiche.</div></div>
+      <div class="schema-step"><span class="n">3</span><div><strong>Toren</strong> — het gebouw waar de klok hangt of hing.</div></div>
+      <div class="schema-step"><span class="n">4</span><div><strong>Beiaard</strong> — een geheel van klokken in een toren.</div></div>
+      <p class="mt-3 mb-0">
+        Een klok wordt aan een gieter, toren of beiaard gekoppeld via een aparte
+        <em>relatie</em> die zélf gegevens draagt (bv. de periode dat de klok in een
+        toren hing, of het type werk van de gieter). Zo blijft de volledige geschiedenis bewaard.
+      </p>
+    </div>
+
+    <div class="accordion" id="guidanceAccordion">
+      <div class="accordion-item">
+        <h2 class="accordion-header">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#g1">
+            Wat vul ik hier wél en niet in?
+          </button>
+        </h2>
+        <div id="g1" class="accordion-collapse collapse" data-bs-parent="#guidanceAccordion">
+          <div class="accordion-body">
+            <p><strong>Wél:</strong> naam, functie, gietjaar, slagtoon, afmetingen, inscriptie,
+              versieringen, profiel en opmerkingen — alles wat een eigenschap van de klok zelf is.</p>
+            <p class="mb-0"><strong>Nog niet hier:</strong> de gieter, de toren en de beiaard.
+              Die koppel je nadat de klok bestaat, samen met hun eigen gegevens (periode, type werk,
+              relatieve toon …). Voorlopig gebeurt dat via het <a href="/admin/">beheer</a>.</p>
+          </div>
+        </div>
+      </div>
+      <div class="accordion-item">
+        <h2 class="accordion-header">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#g2">
+            Waarom apart en niet alles in één veld?
+          </button>
+        </h2>
+        <div id="g2" class="accordion-collapse collapse" data-bs-parent="#guidanceAccordion">
+          <div class="accordion-body mb-0">
+            Eén gieter goot vaak vele klokken, en een klok kan doorheen de eeuwen in
+            verschillende torens hangen. Door die zaken apart te bewaren en te verbinden,
+            vermijden we dubbels, blijft de data consistent en kan je vlot doorheen de
+            inventaris navigeren (van klok naar gieter naar andere klokken van die gieter …).
+          </div>
+        </div>
+      </div>
+      <div class="accordion-item">
+        <h2 class="accordion-header">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#g3">
+            Tips bij het invullen
+          </button>
+        </h2>
+        <div id="g3" class="accordion-collapse collapse" data-bs-parent="#guidanceAccordion">
+          <div class="accordion-body mb-0">
+            <ul class="mb-0">
+              <li>Laat een veld gerust leeg als je het niet zeker weet — niets is verplicht behalve een keuze waar mogelijk.</li>
+              <li>Neem inscripties letterlijk over, met originele spelling.</li>
+              <li>Gewicht in kg, hoogte en diameter in cm.</li>
+              <li>Twijfel je over de functie? Kies wat het dichtst aansluit; je kan het later aanpassen.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p class="text-muted-serif mt-3"><small><i class="bi bi-info-circle"></i> Beweeg over de <span class="info-dot">i</span>-tekens bij de velden voor extra uitleg.</small></p>
+  </div>
+</div>
+{% endblock %}

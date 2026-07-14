@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+from django.urls import reverse
 from django.utils import timezone
 from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator, MaxValueValidator, FileExtensionValidator
@@ -150,6 +151,9 @@ class Bell(FlexibleModel):
     def __str__(self):
         return f"{self.name} ({self.year})"
 
+    def get_absolute_url(self):
+        return reverse('bell_detail', kwargs={'pk': self.pk})
+
 
 # Founder Model
 class Founder(FlexibleModel):
@@ -184,6 +188,9 @@ class Founder(FlexibleModel):
 
     def __str__(self):
         return f"{self.primary_name} - {self.country}"
+
+    def get_absolute_url(self):
+        return reverse('manufacturer_detail', kwargs={'pk': self.pk})
 
 
 # Tower model
@@ -245,6 +252,9 @@ class Tower(FlexibleModel):
     def __str__(self):
         return f"{self.name} - {self.building}"
 
+    def get_absolute_url(self):
+        return reverse('tower_detail', kwargs={'pk': self.pk})
+
 
 # Carillon model
 class Carillon(FlexibleModel):
@@ -287,6 +297,9 @@ class Carillon(FlexibleModel):
 
     def __str__(self):
         return f"{self.tower.name} - {self.established}"
+
+    def get_absolute_url(self):
+        return reverse('carillon_detail', kwargs={'pk': self.pk})
 
 
 # BellPartial model -- the acoustic profile of a bell (campanometry). A bell has
@@ -547,6 +560,13 @@ class Feedback(TimeStampedModel):
 
     subject = models.CharField(max_length=200, verbose_name='Onderwerp', blank=True, null=True)
     message = models.TextField(verbose_name='Bericht')
+    # Optional so anonymous beta testers can leave a way to be reached.
+    contact = models.CharField(
+        max_length=200, verbose_name='Naam of e-mail', blank=True, null=True,
+        help_text='Optioneel — zodat we kunnen terugkoppelen.'
+    )
+    # The page the feedback was sent from, captured automatically for context.
+    page_url = models.CharField(max_length=300, verbose_name='Pagina', blank=True, null=True)
     is_resolved = models.BooleanField(default=False, verbose_name='Opgelost')
 
     class Meta:

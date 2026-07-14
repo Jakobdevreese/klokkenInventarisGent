@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Feedback · Inventaris Gent{% endblock %}
+
+{# Standalone feedback page — the no-JS fallback for the floating widget in base.html. #}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-lg-7">
+    <h1 class="section-title">Feedback geven</h1>
+    <p class="page-intro">
+      Deze inventaris is een prototype in betatest. Meld gerust een fout, een idee,
+      ontbrekende gegevens of iets dat niet werkt — elke opmerking helpt.
+    </p>
+    <hr class="section-rule">
+
+    <div class="card-gothic p-4">
+      <form method="POST" action="{% url 'feedback' %}">
+        {% csrf_token %}
+        <div class="mb-3">
+          <label class="form-label" for="{{ form.subject.id_for_label }}">{{ form.subject.label }}</label>
+          {{ form.subject }}
+        </div>
+        <div class="mb-3">
+          <label class="form-label" for="{{ form.message.id_for_label }}">{{ form.message.label }}</label>
+          {{ form.message }}
+          {% for e in form.message.errors %}<div class="text-danger"><small>{{ e }}</small></div>{% endfor %}
+        </div>
+        <div class="mb-3">
+          <label class="form-label" for="{{ form.contact.id_for_label }}">{{ form.contact.label }}</label>
+          {{ form.contact }}
+          <div class="form-text">{{ form.contact.help_text }}</div>
+        </div>
+        <button type="submit" class="btn btn-bronze"><i class="bi bi-send"></i> Versturen</button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

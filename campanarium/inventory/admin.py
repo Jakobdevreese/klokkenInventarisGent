@@ -117,6 +117,9 @@ class BellFounderAdmin(CreatedByAdminMixin, admin.ModelAdmin):
 
 @admin.register(Feedback)
 class FeedbackAdmin(CreatedByAdminMixin, admin.ModelAdmin):
-    list_display = ('subject', 'content_object', 'is_resolved', 'created_by', 'created_at')
+    # is_resolved is editable inline so beta feedback can be triaged from the list.
+    list_display = ('subject', 'is_resolved', 'contact', 'page_url', 'created_by', 'created_at')
     list_filter = ('is_resolved',)
-    search_fields = ('subject', 'message')
+    list_editable = ('is_resolved',)
+    search_fields = ('subject', 'message', 'contact')
+    readonly_fields = ('page_url', 'created_at', 'updated_at')
